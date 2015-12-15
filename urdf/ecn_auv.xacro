@@ -16,7 +16,7 @@
 <xacro:property name="tr1" value=".02" />
 <xacro:property name="tl1" value=".1" />
 <xacro:property name="tr2" value=".05" />
-<xacro:property name="tl2" value=".05" />
+<xacro:property name="tl2" value=".03" />
 
 <xacro:property name="eps" value="0.00000001"/>
 
@@ -26,6 +26,8 @@
         <parent link="base_link"/>
         <child link="${name}"/>
         <origin rpy="${rpy}" xyz="${xyz}"/>
+        <dynamics damping="100.0" friction="100.0"/>
+        <limit effort="30" velocity="1.0" lower="-${eps}" upper="${eps}" />
     </joint>
     
     <link name="${name}">      
@@ -36,9 +38,6 @@
             <material name="black">
                 <color rgba="0 0 0 1"/>
             </material>
-        <gazebo reference="${name}">
-            <material>Gazebo/Black</material>
-        </gazebo>
             </visual>  
             <visual name="${name}_2">
             <origin xyz="0 0 -${(tl1+tl2)/2}"/>
@@ -48,11 +47,24 @@
             <material name="black">
                 <color rgba="0 0 0 1"/>
             </material>
-            <gazebo reference="${name}">
+        
+            </visual>  
+            <inertial>
+        <mass value="${eps}"/>
+        <inertia
+        ixx="${eps}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${eps}"
+        iyz="0.0"
+        izz="${eps}"/>
+        </inertial>  
+        </link>
+        
+                <gazebo reference="${name}">
             <material>Gazebo/Black</material>
         </gazebo>
-            </visual>  
-        </link>
+        
 </xacro:macro>            
 
 <!-- Plugin list -->
