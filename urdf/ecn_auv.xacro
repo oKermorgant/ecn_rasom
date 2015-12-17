@@ -64,7 +64,6 @@
                 <gazebo reference="${name}">
             <material>Gazebo/Black</material>
         </gazebo>
-        
 </xacro:macro>            
 
 <!-- Plugin list -->
@@ -116,11 +115,12 @@
         iyz="0.0"
         izz="${body_mass*body_radius*body_radius/2}"/>
         </inertial>  
+        
 <buoyancy>
     <compensation>1.01</compensation>
     <origin xyz= "0 0 ${X_cob}"/>
     <limit radius="${body_radius}"/>
-    <damping xyz="60 100 100"/>
+    <damping xyz="60 100 100" rpy="20 50 50"/>
 </buoyancy>
 </link>
 
