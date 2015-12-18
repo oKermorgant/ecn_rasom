@@ -78,7 +78,7 @@ The xyz position and the roll-pitch-yaw orientation between the main body and th
 
 The URDF format was designed to define ground robots. In order to define a AUV, a gazebo plugin is used and will simulate thruster propulsion and hydrodynamic damping.
 To simulate your own AUV design, update the \texttt{thruster} tags  in order to give the map that corresponds to your AUV. \\
-At the end of the file we can also find a \texttt{buoyancy} tag that indicates the hydrodynamic propertieso of the robot body. The \texttt{origin} tag is used to set the center of buoyancy, that is usually above the center of gravity.
+At the end of the file we can also find a \texttt{buoyancy} tag that indicates the hydrodynamic properties of the robot body. The \texttt{origin} tag is used to set the center of buoyancy, that is usually above the center of gravity.
 
 The hydrodynamic damping is defined with 6 coefficients that correspond to the moving directions.
 In order to have damping values, we will make an assumption on the maximum velocity in each direction (that is a few m/s or 10 deg/s).
