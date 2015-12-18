@@ -10,6 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
 )
 
+catkin_package()
+
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
