@@ -8,7 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   roscpp
   sensor_msgs
-  freefloating_gazebo
 )
 
 
