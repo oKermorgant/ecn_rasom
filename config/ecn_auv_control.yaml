@@ -1,7 +1,7 @@
 controllers:
     config:
         body:
-            state: state
+            state: odometry/filtered
             setpoint: body_setpoint
             command: body_command
             cascaded_position: False
