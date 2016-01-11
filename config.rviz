@@ -85,13 +85,13 @@ Visualization Manager:
     - Angle Tolerance: 0.1
       Class: rviz/Odometry
       Color: 0; 225; 0
-      Enabled: false
+      Enabled: true
       Keep: 100
       Length: 1
       Name: Ground truth
       Position Tolerance: 0.1
       Topic: /ecn_auv/state
-      Value: false
+      Value: true
     - Angle Tolerance: 0.1
       Class: rviz/Odometry
       Color: 255; 25; 0
