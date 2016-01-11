@@ -6,6 +6,10 @@
     
     <group ns="ecn_auv">
         
+        <node name="wp" pkg="ecn_rasom" type="waypoint" output="screen" respawn="true">
+            <remap from="state" to="odometry/filtered"/>
+        </node>
+        
         
         <!-- Visual odom with covariance on each axis -->
         <node name="visual_odom" pkg="ecn_rasom" type="nav" output="screen" respawn="true">

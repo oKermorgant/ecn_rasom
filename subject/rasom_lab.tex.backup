@@ -21,7 +21,7 @@ and low-level control (PID's) will be tuned. At the end, the AUV should be able 
 The simulator is a ROS package and can be installed in the \texttt{ros/src} directory with:
 \begin{center}\defaultstyle
 \begin{lstlisting}
-git clone https://github.com/freefloating-gazebo/freefloating_gazebo.git
+git clone -b moving_thrusters https://github.com/freefloating-gazebo/freefloating_gazebo.git
 \end{lstlisting}
 \end{center}
 
@@ -157,29 +157,7 @@ in the \texttt{pose} section.
 \section{Pose estimation from Extended Kalman Filter}
 
 The overall architecture developped before is quite unrealistic. Indeed, data on the topic \texttt{/ecn\_auv/state} is the ground truth in terms of absolute position and velocity of the AUV.
-In this section we will replace it by an EKF estimator and see the problems that arise.
 
-\subsection{EKF package}
-
-Download the EKF package from Charles River Analytics:
-
-\begin{center}\defaultstyle
-\begin{lstlisting}
-cd ros/src
-git clone https://github.com/cra-ros-pkg/robot_localization.git
-\end{lstlisting}
-\end{center}
-
-If needed the packages should also be updated. You may save your AUV model before as it may be erased.
-
-\begin{center}\defaultstyle
-\begin{lstlisting}
-cd freefloating_gazebo
-git pull
-cd ../ecn_rasom
-git pull
-\end{lstlisting}
-\end{center}
 
 
 
