@@ -110,12 +110,12 @@ Once acceptable values have been found for the gains, you may update the \texttt
 
 
 As the AUV is now capable of reaching a desired position, write a C++ program that makes the AUV cycle through several waypoints. \\
-The message to publish is of type \texttt{freefloating\_gazebo/BodySetpoint} and has to be published on the topic \texttt{/ecn\_auv/body\_setpoint}.
+The message to publish is of type \texttt{geometry\_msgs/PoseStamped} and has to be published on the topic \texttt{/ecn\_auv/body\_position\_setpoint}.
 
 The structure of such a message can be found through \texttt{rqt\_gui} or with:
 \begin{center}\defaultstyle
 \begin{lstlisting}
-rosmsg show freefloating_gazebo/BodySetpoint
+rosmsg show geometry_msgs/PoseStamped
 \end{lstlisting}
 \end{center}
 which gives:
@@ -125,7 +125,6 @@ std_msgs/Header header
   uint32 seq
   time stamp
   string frame_id
-string child_frame_id
 geometry_msgs/Pose pose
   geometry_msgs/Point position
     float64 x
@@ -136,20 +135,12 @@ geometry_msgs/Pose pose
     float64 y
     float64 z
     float64 w
-geometry_msgs/Twist twist
-  geometry_msgs/Vector3 linear
-    float64 x
-    float64 y
-    float64 z
-  geometry_msgs/Vector3 angular
-    float64 x
-    float64 y
-    float64 z
+
 \end{lstlisting}
 \end{center}we are only interested in the \texttt{pose} section as we give position setpoints.
 
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
-The current position of the AUV can be found on the topic \texttt{/ecn\_auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{freefloating\_gazebo/BodySetpoint}, and where we are also interested only
+The current position of the AUV can be found on the topic \texttt{/ecn\_auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are also interested only
 in the \texttt{pose} section.
 
 \newpage
