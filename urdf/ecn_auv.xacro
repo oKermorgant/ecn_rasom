@@ -91,11 +91,11 @@
                 </thruster>
                 <thruster>
                     <map>0 0 -1 0 ${-0.3*body_length} 0</map>
-                    <effort>30</effort>
+                    <effort>10</effort>
                 </thruster>
                 <thruster>
                     <map>0 0 -1 0 ${0.3*body_length} 0</map>
-                    <effort>30</effort>
+                    <effort>10</effort>
                 </thruster>       
             </plugin>
         </gazebo>        
