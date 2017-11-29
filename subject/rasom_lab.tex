@@ -36,12 +36,12 @@ This package has the classical ROS structure:
  \dirtree{%
 .1 ecn\_rasom. 
 .2 config.
-.3 ecn\_auv\_control.yaml.
+.3 auv\_control.yaml.
 .2 launch.
 .3 auv.launch.
 .2 subject.
 .2 urdf.
-.3 ecn\_auv.xacro.
+.3 auv.xacro.
 .2 package.xml.
 .2 CMakeLists.txt.
 } 
@@ -52,8 +52,8 @@ This package has the classical ROS structure:
 
 The files to be modified are:
 \begin{enumerate}
- \item \texttt{ecn\_auv.xacro}: defines the geometry of the AUV
- \item \texttt{ecn\_auv\_control.yaml}: PID gain tuning
+ \item \texttt{auv.xacro}: defines the geometry of the AUV
+ \item \texttt{auv\_control.yaml}: PID gain tuning
 \end{enumerate}
 You will also have to write a .cpp file for the waypoint following, and compile it by updating \texttt{CMakeLists.txt}.
 
@@ -102,13 +102,13 @@ rosrun rqt_gui rqt_gui
 \end{lstlisting}
 \end{center}
 Use the topic publisher plugin to send a position setpoint to your AUV. The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
-Once acceptable values have been found for the gains, you may update the \texttt{ecn\_auv\_control.yaml} file to set the default values.
+Once acceptable values have been found for the gains, you may update the \texttt{auv\_control.yaml} file to set the default values.
 
 \section{Waypoint following}
 
 
 As the AUV is now capable of reaching a desired position, write a C++ program that makes the AUV cycle through several waypoints. \\
-The message to publish is of type \texttt{geometry\_msgs/PoseStamped} and has to be published on the topic \texttt{/ecn\_auv/body\_position\_setpoint}.
+The message to publish is of type \texttt{geometry\_msgs/PoseStamped} and has to be published on the topic \texttt{/auv/body\_position\_setpoint}.
 
 The structure of such a message can be found through \texttt{rqt\_gui} or with:
 \begin{center}\defaultstyle
@@ -138,14 +138,14 @@ geometry_msgs/Pose pose
 \end{center}
 
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
-The current position of the AUV can be found on the topic \texttt{/ecn\_auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are also interested only
+The current position of the AUV can be found on the topic \texttt{/auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are also interested only
 in the \texttt{pose} section.
 
 \newpage
 
 \section{Pose estimation from Extended Kalman Filter}
 
-The overall architecture is quite unrealistic. Indeed, data on the topic \texttt{/ecn\_auv/state} is the ground truth in terms of absolute position and velocity of the AUV.
+The overall architecture is quite unrealistic. Indeed, data on the topic \texttt{/auv/state} is the ground truth in terms of absolute position and velocity of the AUV.
 In this section we will replace it by an EKF estimator and see the problems that arise.
 
 \subsection{EKF package}

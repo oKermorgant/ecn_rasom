@@ -11,13 +11,13 @@
     <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/config.rviz" />
     
     <!-- include gazebo spawner (generated while parsing uwsim launcher) -->
-    <group ns="ecn_auv">
-        <param name="robot_description" command="$(find xacro)/xacro.py $(find ecn_rasom)/urdf/ecn_auv.xacro"/>
+    <group ns="auv">
+        <param name="robot_description" command="$(find xacro)/xacro.py $(find ecn_rasom)/urdf/auv.xacro"/>
          <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
-        <node name="spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model ecn_auv -param robot_description -x 0 -y 0 -z 1 -R 0 -P 0 -Y 0"/>
+        <node name="spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model auv -param robot_description -x 0 -y 0 -z 1 -R 0 -P 0 -Y 0"/>
 
         <!-- Load controller configurations (vehicle and arm) from YAML file to parameter server -->
-        <rosparam file="$(find ecn_rasom)/config/ecn_auv_control.yaml" command="load"/>
+        <rosparam file="$(find ecn_rasom)/config/auv_control.yaml" command="load"/>
   
         <!-- Launch low-level PID control for body and arm -->
         <node name="pid_control" pkg="freefloating_gazebo" type="pid_control" output="screen">

@@ -4,7 +4,7 @@
 
 <launch>
     
-    <group ns="ecn_auv">
+    <group ns="auv">
         
         <node name="wp" pkg="ecn_sonar" type="waypoint" output="screen" respawn="true">
             <remap from="state" to="odometry/filtered"/>
