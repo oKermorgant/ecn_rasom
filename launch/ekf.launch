@@ -6,12 +6,12 @@
     
     <group ns="ecn_auv">
         
-        <node name="wp" pkg="ecn_rasom" type="waypoint" output="screen" respawn="true">
+        <node name="wp" pkg="ecn_sonar" type="waypoint" output="screen" respawn="true">
             <remap from="state" to="odometry/filtered"/>
         </node>
         
         
-        <!-- Visual odom with covariance on each axis -->
+        <!-- Visual odom with covariance on each axis >
         <node name="visual_odom" pkg="ecn_rasom" type="nav" output="screen" respawn="true">
             <param name="x" value="0.00003"/>
             <param name="y" value="0.00003"/>
@@ -19,7 +19,7 @@
             <param name="roll" value="0.0001"/>
             <param name="pitch" value="0.00005"/>
             <param name="yaw" value="0.00001"/>
-        </node>       
+        </node-->       
 
         
         

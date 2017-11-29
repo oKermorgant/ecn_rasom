@@ -1,15 +1,13 @@
 \documentclass{ecnreport}
 
 \stud{OD Robotique 2015-2016}
-\topic{Robotique Aérienne et Sous-Marine}
+\topic{Aerial and underwater robots}
 
 \begin{document}
 
-\inserttitle{Robotique Aérienne et Sous-Marine}
+\inserttitle{Aerial and underwater robots}
 
-\insertsubtitle{Simulation d'un sous-marin}
-
-
+\insertsubtitle{AUV simulation and control}
 
 \section{Content of this lab}
 
@@ -103,7 +101,7 @@ A generic tool interface in ROS can be run with:
 rosrun rqt_gui rqt_gui
 \end{lstlisting}
 \end{center}
-Use the topic publisher plugin to send a position setpoint to your AUV. The Dynamic Reconfigure plugin can be used to change the PID gains withou exiting the simulator.
+Use the topic publisher plugin to send a position setpoint to your AUV. The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
 Once acceptable values have been found for the gains, you may update the \texttt{ecn\_auv\_control.yaml} file to set the default values.
 
 \section{Waypoint following}
@@ -137,7 +135,7 @@ geometry_msgs/Pose pose
     float64 w
 
 \end{lstlisting}
-\end{center}we are only interested in the \texttt{pose} section as we give position setpoints.
+\end{center}
 
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
 The current position of the AUV can be found on the topic \texttt{/ecn\_auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are also interested only
@@ -147,7 +145,7 @@ in the \texttt{pose} section.
 
 \section{Pose estimation from Extended Kalman Filter}
 
-The overall architecture developped before is quite unrealistic. Indeed, data on the topic \texttt{/ecn\_auv/state} is the ground truth in terms of absolute position and velocity of the AUV.
+The overall architecture is quite unrealistic. Indeed, data on the topic \texttt{/ecn\_auv/state} is the ground truth in terms of absolute position and velocity of the AUV.
 In this section we will replace it by an EKF estimator and see the problems that arise.
 
 \subsection{EKF package}
@@ -163,14 +161,6 @@ git clone https://github.com/cra-ros-pkg/robot_localization.git
 
 If needed the packages should also be updated. You may save your AUV model before as it may be erased.
 
-\begin{center}\defaultstyle
-\begin{lstlisting}
-cd freefloating_gazebo
-git pull
-cd ../ecn_rasom
-git pull
-\end{lstlisting}
-\end{center}
 
 
 
