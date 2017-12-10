@@ -2,36 +2,35 @@
 
 import roslib
 import rospy 
-from gazebo_msgs.msg import ModelStates
 from geometry_msgs.msg import PoseStamped
 import tf
 from nav_msgs.msg import Odometry
 from pylab import randn, sqrt
+import os
 
 class Listener:
     def __init__(self):
         
         # get model
-        self.model = rospy.get_namespace().replace('/','')
-        self.sub = rospy.Subscriber('/gazebo/model_states', ModelStates, self.state_callback)
+        self.sub = rospy.Subscriber('state', Odometry, self.state_callback)
         self.received = False
-        
-        
+                
     def state_callback(self, msg): 
-        if self.model in msg.name:
-            idx = msg.name.index(self.model)        
-            self.received = True
-            self.pose = msg.pose[idx]
-            self.twist = msg.twist[idx]
+        self.received = True
+        self.pose = msg.pose.pose
+        self.twist = msg.twist.twist
         
 if __name__ == '__main__':
     
     rospy.init_node('nav_odom')   
     br = tf.TransformBroadcaster()
     
+    # unpause physics - bad bad way
+    os.system('rosservice call /gazebo/unpause_physics')
+    
     listener = Listener()
     
-    # nav estim
+    # VO = ground truth + noise
     nav_pub = rospy.Publisher('vo', Odometry, queue_size=10)
     odom = Odometry()
     
@@ -49,6 +48,7 @@ if __name__ == '__main__':
     T =1./100
     while not rospy.is_shutdown():
         
+        # publish ground truth received from Gazebo
         if listener.received:
             odom.pose.pose = listener.pose
             t = odom.pose.pose.position

@@ -3,7 +3,7 @@
     <!-- Launch Gazebo with underwater world, no gui -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="gui" value="false"/>
-        <arg name="paused" value="false"/>
+        <arg name="paused" value="true"/>
         <arg name="world_name" value="$(find freefloating_gazebo)/world/underwater.world"/>
     </include>
     
