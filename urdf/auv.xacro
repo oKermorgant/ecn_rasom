@@ -129,7 +129,7 @@
                 
             </link>
             
-            <gazebo>
+        <!--    <gazebo>
                 <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
                     <alwaysOn>true</alwaysOn>
                     <bodyName>base_link</bodyName>
@@ -138,7 +138,27 @@
                     <gaussianNoise>0.1</gaussianNoise>
                     <updateRate>30.0</updateRate>
                 </plugin>
-            </gazebo>
+            </gazebo>-->
+            
+            <gazebo reference="base_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>imu_data</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>imu_data</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.01</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>base_link</frameName>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
             <xacro:thruster_link name="fwd_left" xyz="${-body_length/3} ${body_radius+tr2} 0" rpy="0 ${PI/2} 0"/>
             <xacro:thruster_link name="fwd_right" xyz="${-body_length/3} -${body_radius+tr2} 0" rpy="0 ${PI/2} 0"/>         
             

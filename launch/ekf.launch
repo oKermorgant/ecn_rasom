@@ -13,7 +13,7 @@
          the state of the robot, with the state vector being defined as X position, Y position, Z position,
          roll, pitch, yaw, their respective velocites, and linear acceleration. Units for all measurements are assumed
          to conform to the SI standard as specified in REP-103. -->
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" clear_params="true">
+    <node pkg="robot_localization" type="ukf_localization_node" name="ekf_localization" clear_params="true">
         
         
     <!-- The filter accepts an arbitrary number of inputs from each input message type (Odometry, PoseStamped,
@@ -21,7 +21,7 @@
            e.g., odom0, odom1, twist0, twist1, imu0, imu1, imu2, etc. The value should be the topic name. These
            parameters obviously have no default values, and must be specified. -->
         <param name="odom0" value="vo"/>  <!-- visual odometry -->
-      <param name="imu0" value="imu_data"/>    <!-- IMU data -->
+        <param name="imu0" value="imu_data"/>    <!-- IMU data -->
       
       
         <!-- Each sensor reading updates some or all of the filter's state. These options give you greater control over

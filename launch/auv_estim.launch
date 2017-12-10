@@ -25,12 +25,12 @@
         
         <!-- Visual odom with covariance on each axis -->
         <node name="visual_odom" pkg="ecn_rasom" type="nav" output="screen" respawn="true">
-            <param name="x" value="0.00000"/>
-            <param name="y" value="0.00000"/>
-            <param name="z" value="0.00000"/>
-            <param name="roll" value="0.0000"/>
-            <param name="pitch" value="0.00000"/>
-            <param name="yaw" value="0.00000"/>
+            <param name="x" value="0.1"/>
+            <param name="y" value="0.1"/>
+            <param name="z" value="0.01"/>
+            <param name="roll" value="0.1"/>
+            <param name="pitch" value="0.1"/>
+            <param name="yaw" value="0.01"/>
         </node>    
 
         </group>
