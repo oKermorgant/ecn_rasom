@@ -5,14 +5,15 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 import tf
 from nav_msgs.msg import Odometry
+from std_srvs.srv import Empty
 from pylab import randn, sqrt
-import os
+import sys
 
 class Listener:
     def __init__(self):
         
         # get model
-        self.sub = rospy.Subscriber('state', Odometry, self.state_callback)
+        self.sub = rospy.Subscriber('ground_truth', Odometry, self.state_callback)
         self.received = False
                 
     def state_callback(self, msg): 
@@ -22,12 +23,13 @@ class Listener:
         
 if __name__ == '__main__':
     
-    rospy.init_node('nav_odom')   
-    br = tf.TransformBroadcaster()
-    
-    # unpause physics - bad bad way
-    os.system('rosservice call /gazebo/unpause_physics')
-    
+    rospy.init_node('nav_odom')
+
+    # unpause physics after a while
+    unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
+    #unpause.wait_for_service()
+    unpause()
+  
     listener = Listener()
     
     # VO = ground truth + noise
@@ -48,9 +50,10 @@ if __name__ == '__main__':
     T =1./100
     while not rospy.is_shutdown():
         
-        # publish ground truth received from Gazebo
+        # modify ground truth received from Gazebo to simulated visual odom
         if listener.received:
             odom.pose.pose = listener.pose
+            '''
             t = odom.pose.pose.position
             t.x += std[0]*randn()
             t.y += std[1]*randn()
@@ -65,11 +68,10 @@ if __name__ == '__main__':
             odom.pose.pose.orientation.y = q[1]
             odom.pose.pose.orientation.z = q[2]
             odom.pose.pose.orientation.w = q[3]
-            
+            '''
             odom.twist.twist = listener.twist
             odom.header.stamp = rospy.Time.now()
             
-            br.sendTransform((t.x, t.y, t.z), (q[0],q[1],q[2],q[3]), rospy.Time.now(), 'base_link', 'world')
             nav_pub.publish(odom)
         
         rospy.sleep(T)

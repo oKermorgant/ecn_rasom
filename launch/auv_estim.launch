@@ -5,10 +5,11 @@
         <arg name="gui" value="false"/>
         <arg name="paused" value="true"/>
         <arg name="world_name" value="$(find freefloating_gazebo)/world/underwater.world"/>
+        <arg name="extra_gazebo_args" value="/auv/state:=/auv/ground_truth"/>
     </include>
     
     <!-- rviz with config -->
-    <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/config.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/config_ekf.rviz" />
     
     <!-- include gazebo spawner (generated while parsing uwsim launcher) -->
     <group ns="auv">
@@ -20,9 +21,17 @@
         <rosparam file="$(find ecn_rasom)/config/auv_control.yaml" command="load"/>
   
         <!-- Launch low-level PID control for body and arm -->
-        <node name="pid_control" pkg="freefloating_gazebo" type="pid_control" output="screen">
-            <remap from="state" to="odometry/filtered"/>
-        </node>
+        <node name="pid_control" pkg="freefloating_gazebo" type="pid_control" output="screen"/>
+        
+        <!-- Visual odom with covariance on each axis -->
+        <node name="visual_odom" pkg="ecn_rasom" type="nav" output="screen" respawn="true">
+            <param name="x" value="0.00000"/>
+            <param name="y" value="0.00000"/>
+            <param name="z" value="0.00000"/>
+            <param name="roll" value="0.0000"/>
+            <param name="pitch" value="0.00000"/>
+            <param name="yaw" value="0.00000"/>
+        </node>    
 
         </group>
     

@@ -7,10 +7,13 @@
         <arg name="paused" value="true"/>
         <arg name="world_name" value="$(find freefloating_gazebo)/world/underwater.world"/>
     </include>
+    
+    <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/config.rviz"/>
   
     <!-- include gazebo spawner (generated while parsing uwsim launcher) -->
     <group ns="auv">
         <param name="robot_description" command="$(find xacro)/xacro.py $(find ecn_rasom)/urdf/auv.xacro"/>
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
         <node name="spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model auv -param robot_description -x 0 -y 0 -z 1 -R 0 -P 0 -Y 0"/>
 
         <!-- Load controller configurations (vehicle and arm) from YAML file to parameter server -->
@@ -18,6 +21,9 @@
   
         <!-- Launch low-level PID control for body and arm -->
         <node name="pid_control" pkg="freefloating_gazebo" type="pid_control" output="screen"/>
+        
+        <!-- change Gazebo odom (ground truth) to tf for RViz -->
+        <node name="odom2tf" pkg="ecn_rasom" type="odom2tf" output="screen" respawn="true"/>
     </group>
     
     <!-- spawn terrain -->
