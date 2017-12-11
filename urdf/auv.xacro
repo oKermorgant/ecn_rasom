@@ -106,7 +106,13 @@
                 <geometry>
                     <cylinder length="${body_length}" radius="${body_radius}"/>
                 </geometry>
-            </visual>
+            </visual> 
+            <collision>
+                <origin rpy="0 ${-PI/2} 0"/>
+                <geometry>
+                    <cylinder length="${body_length}" radius="${body_radius}"/>
+                </geometry>
+            </collision>
             <inertial>
                 <origin xyz="0 0 ${X_cog}" rpy="0 ${-PI/2} 0"/>
                 <mass value="${body_mass}"/>
@@ -125,7 +131,6 @@
                     <limit radius="${body_radius}"/>
                     <damping xyz="60 100 100" rpy="20 50 50"/>
                 </buoyancy>     
-                
                 
             </link>
             
