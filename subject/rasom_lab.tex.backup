@@ -1,15 +1,13 @@
 \documentclass{ecnreport}
 
 \stud{OD Robotique 2015-2016}
-\topic{Robotique Aérienne et Sous-Marine}
+\topic{Aerial and underwater robots}
 
 \begin{document}
 
-\inserttitle{Robotique Aérienne et Sous-Marine}
+\inserttitle{Aerial and underwater robots}
 
-\insertsubtitle{Simulation d'un sous-marin}
-
-
+\insertsubtitle{AUV simulation and control}
 
 \section{Content of this lab}
 
@@ -21,7 +19,7 @@ and low-level control (PID's) will be tuned. At the end, the AUV should be able 
 The simulator is a ROS package and can be installed in the \texttt{ros/src} directory with:
 \begin{center}\defaultstyle
 \begin{lstlisting}
-git clone -b moving_thrusters https://github.com/freefloating-gazebo/freefloating_gazebo.git
+git clone https://github.com/freefloating-gazebo/freefloating_gazebo.git
 \end{lstlisting}
 \end{center}
 
@@ -38,12 +36,17 @@ This package has the classical ROS structure:
  \dirtree{%
 .1 ecn\_rasom. 
 .2 config.
-.3 ecn\_auv\_control.yaml.
+.3 waypoints.yaml.
 .2 launch.
 .3 auv.launch.
+.3 auv\_estim.launch.
+.3 ekf.launch.
+.2 scripts.
+.2 src.
+.3 waypoint.cpp.
 .2 subject.
 .2 urdf.
-.3 ecn\_auv.xacro.
+.3 auv.xacro.
 .2 package.xml.
 .2 CMakeLists.txt.
 } 
@@ -52,16 +55,70 @@ This package has the classical ROS structure:
 \caption{Files used by the simulator}
 \end{figure}
 
-The files to be modified are:
-\begin{enumerate}
- \item \texttt{ecn\_auv.xacro}: defines the geometry of the AUV
- \item \texttt{ecn\_auv\_control.yaml}: PID gain tuning
-\end{enumerate}
-You will also have to write a .cpp file for the waypoint following, and compile it by updating \texttt{CMakeLists.txt}.
+\section{Waypoint following}
+
+The first task is to finish the waypoint following node defined in \texttt{waypoint.cpp}. This node already loads the waypoints defined in \texttt{waypoints.yaml} but does not follow them yet.
+These waypoints should be modified according to the trajectory you want the robot to follow. A waypoint is defined by its $(x,y,z,\theta)$ values where $theta$ is the yaw angle. Look at the current
+code to see how to change a yaw angle to a quaternion needed by the \texttt{PoseStamped} message.\\
+
+Topics can be renamed or the node can be run through a launch file in order to be in the \texttt{/auv} namespace.
+The simulation can then be run with:
+\begin{itemize}
+ \item \texttt{roslaunch ecn\_rasom auv.launch} for all built-in nodes
+ \item \texttt{rosrun ecn\_rasom waypoint} for yours
+\end{itemize}
+
+which leads to the following graph where \texttt{/auv/wp} is your node.
+\begin{figure}[h]\centering
+ \includegraphics[width=.7\linewidth]{graph_wp}
+\end{figure}
+Two GUI are launched: 
+\begin{itemize}
+ \item Gazebo is the simulator, the physics are activated with the \emph{Play} button on the bottom
+ \item RViz is a visualizer and displays the current pose estimate (red) and the current waypoint to be followed (green)
+\end{itemize}
+Your node should loop through the waypoints (go back to waypoint 0 after the last one was reached).
+The structure of the \texttt{setpoint} message can be found with:
+\begin{center}\defaultstyle
+\begin{lstlisting}
+rosmsg show geometry_msgs/PoseStamped
+\end{lstlisting}
+\end{center}
+which gives:
+\begin{center}\defaultstyle
+\begin{lstlisting}
+std_msgs/Header header
+  uint32 seq
+  time stamp
+  string frame_id
+geometry_msgs/Pose pose
+  geometry_msgs/Point position
+    float64 x
+    float64 y
+    float64 z
+  geometry_msgs/Quaternion orientation
+    float64 x
+    float64 y
+    float64 z
+    float64 w
+\end{lstlisting}
+\end{center}
+The header is already written but you have to define the pose section from the reading of the loaded waypoint file.
+A function is available to return the $(x,y,z,\theta)$ field of the $i-$th waypoint with:
+\begin{center}\cppstyle
+\begin{lstlisting}
+double x = WPcoord(0, "x");
+\end{lstlisting}
+\end{center}
+Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
+The current position of the AUV can be found on the topic \texttt{/auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are interested only
+in the \texttt{pose} section.
 
 
+\section{Modification and tunign of the robot}
 
-\section{Definition of a robot in \texttt{xacro} format}
+The underwater robot itself is defined in the \texttt{auv.xacro} file. Check the available sensors and thrusters and find the available motions from the thruster map.
+You can add or modify the thrusters if needed. The thruster control matrix is computed automatically, however the gains of the PID are not tuned accordingly.
 
 \subsection{Basics of URDF}
 
@@ -74,89 +131,56 @@ A tutorial is available at \texttt{http://wiki.ros.org/urdf/Tutorials/Building a
 In addition to the main body, thruster links can be defined with the \texttt{xacro:thruster\_link} tag, as  shown in the example.
 The xyz position and the roll-pitch-yaw orientation between the main body and the thruster has to be indicated.
 
-\subsection{AUV tags}
-
-The URDF format was designed to define ground robots. In order to define a AUV, a gazebo plugin is used and will simulate thruster propulsion and hydrodynamic damping.
-To simulate your own AUV design, update the \texttt{thruster} tags  in order to give the map that corresponds to your AUV. \\
-At the end of the file we can also find a \texttt{buoyancy} tag that indicates the hydrodynamic properties of the robot body. The \texttt{origin} tag is used to set the center of buoyancy, that is usually above the center of gravity.
-
-The hydrodynamic damping is defined with 6 coefficients that correspond to the moving directions.
-In order to have damping values, we will make an assumption on the maximum velocity in each direction (that is a few m/s or 10 deg/s).
-On each axis, this velocity limit is linked to the maximum force (or torque) and the corresponding damping coefficient with the following relation:
-\begin{equation*}
- m\dot v = 0 = \tau_{\max} - k.v_{\lim{}}
-\end{equation*}where $\tau_{\max}$ is the maximum effort or torque in this direction and depends on the chosen thruster positions.
-
-
 \section{Low-level tuning}
 
-Now that the URDF is written, we can use the launch file to run the simulation:
-\begin{center}\defaultstyle
-\begin{lstlisting}
-roslaunch ecn_rasom auv.launch
-\end{lstlisting}
-\end{center}
-The simulated AUV is waiting for data on the \texttt{body\_command} topic, which is computed from the \texttt{body\_setpoint} topic through PID's.\\
-A generic tool interface in ROS can be run with:
+Now that the xacro is updated, we can use the launch file to run the simulation.
+
+The gains of the PID can be tuned online through Dynamic Reconfigure:
 \begin{center}\defaultstyle
 \begin{lstlisting}
 rosrun rqt_gui rqt_gui
 \end{lstlisting}
 \end{center}
-Use the topic publisher plugin to send a position setpoint to your AUV. The Dynamic Reconfigure plugin can be used to change the PID gains withou exiting the simulator.
-Once acceptable values have been found for the gains, you may update the \texttt{ecn\_auv\_control.yaml} file to set the default values.
-
-\section{Waypoint following}
-
-
-As the AUV is now capable of reaching a desired position, write a C++ program that makes the AUV cycle through several waypoints. \\
-The message to publish is of type \texttt{freefloating\_gazebo/BodySetpoint} and has to be published on the topic \texttt{/ecn\_auv/body\_setpoint}.
-
-The structure of such a message can be found through \texttt{rqt\_gui} or with:
-\begin{center}\defaultstyle
-\begin{lstlisting}
-rosmsg show freefloating_gazebo/BodySetpoint
-\end{lstlisting}
-\end{center}
-which gives:
-\begin{center}\defaultstyle
-\begin{lstlisting}
-std_msgs/Header header
-  uint32 seq
-  time stamp
-  string frame_id
-string child_frame_id
-geometry_msgs/Pose pose
-  geometry_msgs/Point position
-    float64 x
-    float64 y
-    float64 z
-  geometry_msgs/Quaternion orientation
-    float64 x
-    float64 y
-    float64 z
-    float64 w
-geometry_msgs/Twist twist
-  geometry_msgs/Vector3 linear
-    float64 x
-    float64 y
-    float64 z
-  geometry_msgs/Vector3 angular
-    float64 x
-    float64 y
-    float64 z
-\end{lstlisting}
-\end{center}we are only interested in the \texttt{pose} section as we give position setpoints.
-
-Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
-The current position of the AUV can be found on the topic \texttt{/ecn\_auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{freefloating\_gazebo/BodySetpoint}, and where we are also interested only
-in the \texttt{pose} section.
+The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
+Once acceptable values have been found for the gains, you may update the \texttt{auv\_control.yaml} file to set the default values.
 
 \newpage
 
 \section{Pose estimation from Extended Kalman Filter}
 
-The overall architecture developped before is quite unrealistic. Indeed, data on the topic \texttt{/ecn\_auv/state} is the ground truth in terms of absolute position and velocity of the AUV.
+The overall architecture is quite unrealistic. Indeed, data on the topic \texttt{/auv/state} is the ground truth in terms of absolute position and velocity of the AUV (it is coming
+directly from the simulator).
+In this section we will replace it by an EKF estimator and see the problems that arise. The new graph will be:
+\begin{figure}[h]\centering
+ \includegraphics[width=\linewidth]{graph_ekf}
+\end{figure}
+
+Here, Gazebo is still publishing the ground truth but on the \texttt{/auv/ground\_truth} topic. This data is processed (noise is added)
+in order to simulate a visual odometry (\texttt{/auv/vo} topic). 
+Gazebo is also publishing simulated data from the IMU on the \texttt{/auv/imu\_data} topic. 
+
+The two sensor data (visual odometry and IMU) should be fused by the EKF node in order to output an estimate of the state on the \texttt{/auv/state} topic 
+that is used by the PID and by your waypoint node.
+
+Two launch files have to be run to do so:
+\begin{itemize}
+ \item \texttt{roslaunch ecn\_rasom auv\_estim.launch} for all built-in nodes
+ \item \texttt{roslaunch ecn\_rasom ekf.launch} for the EKF and your node
+\end{itemize}
+
+The \texttt{ekf.launch} should be modified in order to:
+\begin{itemize}
+ \item run your waypoint node
+ \item use the EKF node with available sensors
+\end{itemize}
+Documentation of the EKF node can be found on the \link{robotlocalization package website}{http://docs.ros.org/lunar/api/robot_localization/html/index.html}.
+This node creates a 15-components (6 pose, 6 velocities and 3 accelerations) state estimate.
+The initial version of \texttt{ekf.launch} should be modified so that the EKF node
+subscribes to the available data topics (visual odometry and IMU). The boolean tables should
+also be modified in order to tell which components of the state are measured by each of the sensors. 
+
+
+
 
 
 

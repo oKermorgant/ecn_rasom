@@ -14,14 +14,14 @@
          roll, pitch, yaw, their respective velocites, and linear acceleration. Units for all measurements are assumed
          to conform to the SI standard as specified in REP-103. -->
     <node pkg="robot_localization" type="ukf_localization_node" name="ekf_localization" clear_params="true">
-        
+
         
     <!-- The filter accepts an arbitrary number of inputs from each input message type (Odometry, PoseStamped,
            TwistStamped, Imu). To add a new one, simply append the next number in the sequence to its base name,
            e.g., odom0, odom1, twist0, twist1, imu0, imu1, imu2, etc. The value should be the topic name. These
            parameters obviously have no default values, and must be specified. -->
-        <param name="odom0" value="vo"/>  <!-- visual odometry -->
-        <param name="imu0" value="imu_data"/>    <!-- IMU data -->
+            <param name="odom0" value=""/>  <!-- visual odometry topic -->
+            <param name="imu0" value=""/>    <!-- IMU data topic -->
       
       
         <!-- Each sensor reading updates some or all of the filter's state. These options give you greater control over

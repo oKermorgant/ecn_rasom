@@ -9,20 +9,25 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   nav_msgs
   roscpp
+  roslib
   sensor_msgs
   geometry_msgs
 )
+
+find_package(PkgConfig)
+pkg_check_modules(YamlCpp yaml-cpp)
 
 catkin_package()
 
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
+  ${YamlCpp_INCLUDE_DIRS}
 )
 
 ## Declare a C++ executable
-# add_executable(ecn_rasom_node ecn_rasom_node.cpp)
+add_executable(waypoint src/waypoint.cpp)
 
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(ecn_rasom_node   ${catkin_LIBRARIES} )
+target_link_libraries(waypoint ${catkin_LIBRARIES} yaml-cpp)
