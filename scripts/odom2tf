@@ -2,18 +2,15 @@
 
 import roslib
 import rospy 
-from geometry_msgs.msg import PoseStamped
 import tf
 from nav_msgs.msg import Odometry
 from std_srvs.srv import Empty
-from pylab import randn, sqrt
 import sys
 
 
 rospy.init_node('odom2tf')
 
 br = tf.TransformBroadcaster()
-
 
 def odomCB(msg):
     pose = msg.pose.pose
@@ -24,4 +21,11 @@ def odomCB(msg):
                      'world')
     
 rospy.Subscriber('state', Odometry, odomCB)
+
+
+# unpause physics after a while
+unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
+#unpause.wait_for_service()
+unpause()
+    
 rospy.spin()

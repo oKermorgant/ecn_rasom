@@ -1,18 +1,24 @@
 <?xml version="1.0"?>
 <launch>
+    
+    <arg name="uwsim" default="false"/>
 
     <!-- Launch Gazebo with underwater world -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="gui" value="true" />
+        <arg name="gui" value="false" if="$(arg uwsim)"/>
         <arg name="paused" value="true"/>
         <arg name="world_name" value="$(find freefloating_gazebo)/world/underwater.world"/>
     </include>
     
     <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/config.rviz"/>
+    
+     <node name="uwsim" pkg="uwsim" type="uwsim" 
+        args="--dataPath $(find ecn_rasom) --configfile scenes/auv.xml" respawn="true"
+           if="$(arg uwsim)" />
   
     <!-- include gazebo spawner (generated while parsing uwsim launcher) -->
     <group ns="auv">
-        <param name="robot_description" command="$(find xacro)/xacro.py $(find ecn_rasom)/urdf/auv.xacro"/>
+        <param name="robot_description" command="$(find xacro)/xacro.py --inorder $(find ecn_rasom)/urdf/auv.xacro"/>
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
         <node name="spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model auv -param robot_description -x 0 -y 0 -z 1 -R 0 -P 0 -Y 0"/>
 
@@ -27,7 +33,7 @@
     </group>
     
     <!-- spawn terrain -->
-    <param name="terrain_description" command="$(find xacro)/xacro.py $(find ecn_rasom)/urdf/terrain.sdf"/>
+    <param name="terrain_description" command="$(find xacro)/xacro.py $(find ecn_rasom)/terrain/shipwreck/terrain.sdf"/>
     <node name="terrain_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-sdf -model terrain -param terrain_description -x 0 -y 0 -z 0 -R 0 -P 0 -Y 0"/>
    
 </launch>
