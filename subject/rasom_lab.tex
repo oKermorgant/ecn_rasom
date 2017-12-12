@@ -16,14 +16,8 @@ and low-level control (PID's) will be tuned. At the end, the AUV should be able 
 
 \subsection{Installing the simulator}
 
-The simulator is a ROS package and can be installed in the \texttt{ros/src} directory with:
-\begin{center}\defaultstyle
-\begin{lstlisting}
-git clone https://github.com/freefloating-gazebo/freefloating_gazebo.git
-\end{lstlisting}
-\end{center}
-
-The actual package that you will modify is downloaded with:
+The simulator is in a ROS package called \texttt{freefloating\_gazebo} and should be already installed on the P-ro computers.
+The actual package that you will modify is downloaded (in \texttt{\~{}/ros/src}) with:
 \begin{center}\defaultstyle
 \begin{lstlisting}
 git clone https://github.com/oKermorgant/ecn_rasom.git
@@ -67,7 +61,6 @@ The simulation can then be run with:
  \item \texttt{roslaunch ecn\_rasom auv.launch} for all built-in nodes
  \item \texttt{rosrun ecn\_rasom waypoint} for yours
 \end{itemize}
-
 which leads to the following graph where \texttt{/auv/wp} is your node.
 \begin{figure}[h]\centering
  \includegraphics[width=.8\linewidth]{graph_wp}
@@ -113,10 +106,12 @@ double x = WPcoord(idx, "x");
 \end{center}
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
 The current position of the AUV can be found on the topic \texttt{/auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are interested only
-in the \texttt{pose} section.
+in the \texttt{pose} section.\\
+
+Finally, manually defined setpoints can be easily published by using \texttt{rqt} message publisher, to check if the waypoints can be followed (maximum depth, etc.).
 
 
-\section{Modification and tunign of the robot}
+\section{Modification and tuning of the robot}
 
 The underwater robot itself is defined in the \texttt{auv.xacro} file. Check the available sensors and thrusters and find the available motions from the thruster map.
 You can add or modify the thrusters if needed. The thruster control matrix is computed automatically, however the gains of the PID are not tuned accordingly.
@@ -136,12 +131,7 @@ The xyz position and the roll-pitch-yaw orientation between the main body and th
 
 Now that the xacro is updated, we can use the launch file to run the simulation.
 
-The gains of the PID can be tuned online through Dynamic Reconfigure:
-\begin{center}\defaultstyle
-\begin{lstlisting}
-rosrun rqt_gui rqt_gui
-\end{lstlisting}
-\end{center}
+The gains of the PID can be tuned online through Dynamic Reconfigure in (\texttt{rqt}).
 The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
 Once acceptable values have been found for the gains, you may update the \texttt{auv\_control.yaml} file to set the default values.
 
