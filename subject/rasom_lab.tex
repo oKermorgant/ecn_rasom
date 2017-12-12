@@ -70,13 +70,14 @@ The simulation can then be run with:
 
 which leads to the following graph where \texttt{/auv/wp} is your node.
 \begin{figure}[h]\centering
- \includegraphics[width=.7\linewidth]{graph_wp}
+ \includegraphics[width=.8\linewidth]{graph_wp}
 \end{figure}
 Two GUI are launched: 
 \begin{itemize}
- \item Gazebo is the simulator, the physics are activated with the \emph{Play} button on the bottom
+ \item UWsim is an underwater rendering software that displays the AUV in a realistic environment
  \item RViz is a visualizer and displays the current pose estimate (red) and the current waypoint to be followed (green)
 \end{itemize}
+The Gazebo dynamic simulator is also launched without GUI. In case of issues with UWsim display, the launch file can be used with Gazebo GUI instead of UWSim: 
 Your node should loop through the waypoints (go back to waypoint 0 after the last one was reached).
 The structure of the \texttt{setpoint} message can be found with:
 \begin{center}\defaultstyle
@@ -143,8 +144,6 @@ rosrun rqt_gui rqt_gui
 \end{center}
 The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
 Once acceptable values have been found for the gains, you may update the \texttt{auv\_control.yaml} file to set the default values.
-
-\newpage
 
 \section{Pose estimation from Extended Kalman Filter}
 

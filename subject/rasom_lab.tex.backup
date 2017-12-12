@@ -74,9 +74,10 @@ which leads to the following graph where \texttt{/auv/wp} is your node.
 \end{figure}
 Two GUI are launched: 
 \begin{itemize}
- \item Gazebo is the simulator, the physics are activated with the \emph{Play} button on the bottom
+ \item UWsim 
  \item RViz is a visualizer and displays the current pose estimate (red) and the current waypoint to be followed (green)
 \end{itemize}
+The Gazebo dynamic simulator is also launched without GUI. In case of issues with UWsim display
 Your node should loop through the waypoints (go back to waypoint 0 after the last one was reached).
 The structure of the \texttt{setpoint} message can be found with:
 \begin{center}\defaultstyle
@@ -107,7 +108,7 @@ The header is already written but you have to define the pose section from the r
 A function is available to return the $(x,y,z,\theta)$ field of the $i-$th waypoint with:
 \begin{center}\cppstyle
 \begin{lstlisting}
-double x = WPcoord(0, "x");
+double x = WPcoord(idx, "x");
 \end{lstlisting}
 \end{center}
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
@@ -148,7 +149,8 @@ Once acceptable values have been found for the gains, you may update the \texttt
 
 \section{Pose estimation from Extended Kalman Filter}
 
-The overall architecture is quite unrealistic. Indeed, data on the topic \texttt{/auv/state} is the ground truth in terms of absolute position and velocity of the AUV (it is coming
+The architecture used until then is quite unrealistic.
+Indeed, data on the topic \texttt{/auv/state} is the ground truth in terms of absolute position and velocity of the AUV (it is coming
 directly from the simulator).
 In this section we will replace it by an EKF estimator and see the problems that arise. The new graph will be:
 \begin{figure}[h]\centering
@@ -158,6 +160,8 @@ In this section we will replace it by an EKF estimator and see the problems that
 Here, Gazebo is still publishing the ground truth but on the \texttt{/auv/ground\_truth} topic. This data is processed (noise is added)
 in order to simulate a visual odometry (\texttt{/auv/vo} topic). 
 Gazebo is also publishing simulated data from the IMU on the \texttt{/auv/imu\_data} topic. 
+Finally, the Gazebo gui is not visible anymore (like an actual underwater vehicle) and RViz displays the estimate of the AUV (in red). 
+For comparison purpose, the ground truth is displayed in blue. The setpoint is still displayed in green.
 
 The two sensor data (visual odometry and IMU) should be fused by the EKF node in order to output an estimate of the state on the \texttt{/auv/state} topic 
 that is used by the PID and by your waypoint node.
@@ -173,16 +177,12 @@ The \texttt{ekf.launch} should be modified in order to:
  \item run your waypoint node
  \item use the EKF node with available sensors
 \end{itemize}
-Documentation of the EKF node can be found on the \link{robotlocalization package website}{http://docs.ros.org/lunar/api/robot_localization/html/index.html}.
+Documentation of the EKF node can be found on the \link{http://docs.ros.org/lunar/api/robot_localization/html/index.html}{\texttt{robot\_localization} package website}.
 This node creates a 15-components (6 pose, 6 velocities and 3 accelerations) state estimate.
-The initial version of \texttt{ekf.launch} should be modified so that the EKF node
+The parameters of this node should be modified so that the EKF node
 subscribes to the available data topics (visual odometry and IMU). The boolean tables should
-also be modified in order to tell which components of the state are measured by each of the sensors. 
+also be updated in order to tell which components of the state are measured by each of the sensors. 
 
-
-
-
-
-
+Do not hesitate to run the EKF with only a partial knowledge of the state (only IMU for instance) in order to see the effect on the localization accuracy.
 
 \end{document}

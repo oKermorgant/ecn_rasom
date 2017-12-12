@@ -36,7 +36,7 @@
         </group>
     
     <!-- spawn terrain -->
-    <param name="terrain_description" command="$(find xacro)/xacro.py $(find ecn_rasom)/urdf/terrain.sdf"/>
+    <param name="terrain_description" command="$(find xacro)/xacro.py $(find ecn_rasom)/scenes/shipwreck/terrain.sdf"/>
     <node name="terrain_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-sdf -model terrain -param terrain_description -x 0 -y 0 -z 0 -R 0 -P 0 -Y 0"/>
     
 
