@@ -49,6 +49,16 @@ This package has the classical ROS structure:
 \caption{Files used by the simulator}
 \end{figure}
 
+\subsection{First run of Gazebo}
+
+It was noticed on some computers that the first launch of Gazebo can take some time. In order to check, launch this empty world simulation:
+\begin{center}\defaultstyle
+\begin{lstlisting}
+roslaunch gazebo_ros empty_world.launch
+  \end{lstlisting}
+  \end{center}
+  When the Gazebo GUI is displayed, type\texttt{Ctrl-C} in order to end the programs.
+
 \section{Waypoint following}
 
 The first task is to finish the waypoint following node defined in \texttt{waypoint.cpp}. This node already loads the waypoints defined in \texttt{waypoints.yaml} but does not follow them yet.
@@ -71,8 +81,16 @@ Two GUI are launched:
  \item UWsim is an underwater rendering software that displays the AUV in a realistic environment
  \item RViz is a visualizer and displays the current pose estimate (red) and the current waypoint to be followed (green)
 \end{itemize}
-The Gazebo dynamic simulator is also launched without GUI. In case of issues with UWsim display, the launch file can be used with Gazebo GUI instead of UWSim: 
-Your node should loop through the waypoints (go back to waypoint 0 after the last one was reached).
+The Gazebo dynamic simulator is also launched without GUI. In case of issues with UWsim display, the launch file can be used with Gazebo GUI instead of UWSim:
+\begin{center}\defaultstyle
+\begin{lstlisting}
+roslaunch ecn_rasom auv.launch uwsim:=false
+  \end{lstlisting}
+  \end{center}
+
+Manually defined setpoints can be easily published by using \texttt{rqt} message publisher, to check if the waypoints can be followed (maximum depth, etc.).\\
+
+The goal is to modify the source and waypoint list in order to loop through the waypoints (go back to waypoint 0 after the last one was reached).
 The structure of the \texttt{setpoint} message can be found with:
 \begin{center}\defaultstyle
 \begin{lstlisting}
@@ -108,8 +126,6 @@ double x = WPcoord(idx, "x");
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
 The current position of the AUV can be found on the topic \texttt{/auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are interested only
 in the \texttt{pose} section.\\
-
-Finally, manually defined setpoints can be easily published by using \texttt{rqt} message publisher, to check if the waypoints can be followed (maximum depth, etc.).
 
 
 \section{Modification and tuning of the robot}

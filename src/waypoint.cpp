@@ -34,10 +34,10 @@ int main (int argc, char** argv)
 
     // subscriber
     odom_ok = false;
-    ros::Subscriber state_sub = nh.subscribe<nav_msgs::Odometry> ("state", 1, poseCallback);
+    ros::Subscriber state_sub = nh.subscribe<nav_msgs::Odometry> ("/auv/state", 1, poseCallback);
 
     // publisher
-    ros::Publisher setpoint_pub = nh.advertise<geometry_msgs::PoseStamped>("body_position_setpoint", 1);
+    ros::Publisher setpoint_pub = nh.advertise<geometry_msgs::PoseStamped>("/auv/body_position_setpoint", 1);
     geometry_msgs::PoseStamped setpoint;
     setpoint.header.frame_id = "world";
 
