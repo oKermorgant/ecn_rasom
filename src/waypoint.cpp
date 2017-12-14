@@ -44,9 +44,12 @@ int main (int argc, char** argv)
     // load waypoints
     std::string wp_path = ros::package::getPath("ecn_rasom") + "/config/waypoints.yaml";
     YAML::Node node = YAML::LoadFile(wp_path);
-    // get threshold
-    double thr = node["threshold"].as<double>();
+    // get thresholds
+    const double thr = node["threshold"].as<double>();
     std::cout << "WP Threshold: " << thr << std::endl;
+    const double thr_angle = node["threshold_angle"].as<double>();
+    std::cout << "WP Angle Threshold: " << thr_angle << std::endl;
+
     // get waypoints
     wp = node["wp"];
     std::cout << "Found " << wp.size() << " waypoints" << std::endl;

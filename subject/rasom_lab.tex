@@ -124,6 +124,7 @@ double x = WPcoord(idx, "x");
 \end{lstlisting}
 \end{center}
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
+Two thresholds are loaded from the YAML file: \texttt{thr} and \texttt{thr\_angle}, that may be tuned accordingly to the desired accuracy.\\
 The current position of the AUV can be found on the topic \texttt{/auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are interested only
 in the \texttt{pose} section.\\
 
