@@ -14,17 +14,34 @@ using namespace std;
 bool odom_ok;
 geometry_msgs::Pose pose;
 
+
 void poseCallback(const nav_msgs::OdometryConstPtr & msg)
 {
     pose = msg->pose.pose;
     odom_ok = true;
 }
 
-// global var for WP reader
+// global vars for WP / setpoint
 YAML::Node wp;
-double WPcoord(int idx, std::string var)
+geometry_msgs::PoseStamped setpoint;
+
+// get a particular coordinate of a given WP
+double coord(int idx, std::string var)
 {
     return wp[idx][var].as<double>();
+}
+
+void writeWP(int idx)
+{
+    setpoint.pose.position.x = coord(idx, "x");
+    setpoint.pose.position.y = coord(idx, "y");
+    setpoint.pose.position.z = coord(idx, "z");
+    setpoint.pose.orientation.x = 0;
+    setpoint.pose.orientation.y = 0;
+    setpoint.pose.orientation.z = sin(coord(idx, "theta")/2);
+    setpoint.pose.orientation.w = cos(coord(idx, "theta")/2);
+
+    setpoint.header.stamp = ros::Time::now();
 }
 
 int main (int argc, char** argv)
@@ -38,7 +55,6 @@ int main (int argc, char** argv)
 
     // publisher
     ros::Publisher setpoint_pub = nh.advertise<geometry_msgs::PoseStamped>("/auv/body_position_setpoint", 1);
-    geometry_msgs::PoseStamped setpoint;
     setpoint.header.frame_id = "world";
 
     // load waypoints
@@ -57,21 +73,15 @@ int main (int argc, char** argv)
     for(idx = 0; idx < wp.size(); ++idx)
     {
         std::cout << "   wp #" << idx << ": ";
-        std::cout << "x = " << WPcoord(idx, "x");
-        std::cout << ", y = " << WPcoord(idx, "y");
-        std::cout << ", z = " << WPcoord(idx, "z");
-        std::cout << ", theta = " << WPcoord(idx, "theta");
+        std::cout << "x = " << coord(idx, "x");
+        std::cout << ", y = " << coord(idx, "y");
+        std::cout << ", z = " << coord(idx, "z");
+        std::cout << ", theta = " << coord(idx, "theta");
         std::cout << std::endl;
     }
 
     // write first WP
-    setpoint.pose.position.x = WPcoord(0, "x");
-    setpoint.pose.position.y = WPcoord(0, "y");
-    setpoint.pose.position.z = WPcoord(0, "z");
-    setpoint.pose.orientation.x = 0;
-    setpoint.pose.orientation.y = 0;
-    setpoint.pose.orientation.z = sin(WPcoord(0, "theta")/2);
-    setpoint.pose.orientation.w = cos(WPcoord(0, "theta")/2);
+    writeWP(0);
 
     ros::Rate rate(10);
 
@@ -89,7 +99,6 @@ int main (int argc, char** argv)
 
 
             // publish setpoint
-            setpoint.header.stamp = ros::Time::now();
             setpoint_pub.publish(setpoint);
         }
         ros::spinOnce();

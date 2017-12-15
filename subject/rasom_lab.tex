@@ -117,10 +117,10 @@ geometry_msgs/Pose pose
 \end{lstlisting}
 \end{center}
 The header is already written but you have to define the pose section from the reading of the loaded waypoint file.
-A function is available to return the $(x,y,z,\theta)$ field of the $i-$th waypoint with:
+A function is available to write the $i-$th waypoint into the \texttt{setpoint} message:
 \begin{center}\cppstyle
 \begin{lstlisting}
-double x = WPcoord(idx, "x");
+writeWP(int idx);
 \end{lstlisting}
 \end{center}
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
