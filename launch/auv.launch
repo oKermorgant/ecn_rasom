@@ -10,7 +10,12 @@
         <arg name="world_name" value="$(find freefloating_gazebo)/world/underwater.world"/>
     </include>
     
-    <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/config.rviz"/>
+    <!-- add 100 x 100 m turquoise water -->
+    <node name="surface" pkg="freefloating_gazebo" type="surface.py"
+          args="-x 100 -y 100 -g 0.2 -b 1 -a 0.2"
+          />
+    
+    <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/config.rviz" respawn="true"/>
     
      <node name="uwsim" pkg="uwsim" type="uwsim" 
         args="--dataPath $(find ecn_rasom) --configfile scenes/auv.xml" respawn="true"

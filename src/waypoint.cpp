@@ -8,6 +8,7 @@
 #include <geometry_msgs/Point.h>
 #include <nav_msgs/Odometry.h>
 #include <yaml-cpp/yaml.h>
+
 using namespace std;
 
 // global variables for subscriber
@@ -95,6 +96,8 @@ int main (int argc, char** argv)
             // check Cartesian distance to current wp
             // update setpoint if needed
 
+                        
+
 
 
 
@@ -104,4 +107,5 @@ int main (int argc, char** argv)
         ros::spinOnce();
         rate.sleep();
     }
+
 }
