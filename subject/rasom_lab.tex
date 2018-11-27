@@ -16,7 +16,7 @@ and low-level control (PID's) will be tuned. At the end, the AUV should be able 
 
 \subsection{Installing the simulator}
 
-The simulator is in a ROS package called \texttt{freefloating\_gazebo} and should be already installed on the P-ro computers.
+The simulator is in a ROS package called \texttt{freefloating\_gazebo} and should be already installed on the P-ro computers.\\
 The actual package that you will modify is downloaded (in \texttt{\~{}/ros/src}) with \texttt{rosdl ecn\_rasom}\footnote{to use your own computer, git should be used to clone https://github.com/oKermorgant/ecn\_rasom.git}
 
 This package has the classical ROS structure:
@@ -58,7 +58,7 @@ roslaunch gazebo_ros empty_world.launch
 \section{Waypoint following}
 
 The first task is to finish the waypoint following node defined in \texttt{waypoint.cpp}. This node already loads the waypoints defined in \texttt{waypoints.yaml} but does not follow them yet.
-These waypoints should be modified according to the trajectory you want the robot to follow. A waypoint is defined by its $(x,y,z,\theta)$ values where $theta$ is the yaw angle. Look at the current
+These waypoints should be modified according to the trajectory you want the robot to follow. A waypoint is defined by its $(x,y,z,\theta)$ values where $\theta$ is the yaw angle. Look at the current
 code to see how to change a yaw angle to a quaternion needed by the \texttt{PoseStamped} message.\\
 
 Topics can be renamed or the node can be run through a launch file in order to be in the \texttt{/auv} namespace.
@@ -130,20 +130,19 @@ in the \texttt{pose} section.\\
 The underwater robot itself is defined in the \texttt{auv.xacro} file. Check the available sensors and thrusters and find the available motions from the thruster map.
 You can add or modify the thrusters if needed. The thruster control matrix is computed automatically, however the gains of the PID are not tuned accordingly.
 
-\subsection{Basics of URDF}
-
-The \texttt{xacro} format allows using variables to generate the URDF model of a robot. 
-In this format, the robot is composed of links and joints. In our case we will assume that the AUV has only one link and no joints.
-
-In the example the AUV is composed of one cylinder, which is described under the \texttt{visual} tag.
-A tutorial is available at \texttt{http://wiki.ros.org/urdf/Tutorials/Building a Visual Robot Model with URDF from Scratch}
-
-In addition to the main body, thruster links can be defined with the \texttt{xacro:thruster\_link} tag, as  shown in the example.
-The xyz position and the roll-pitch-yaw orientation between the main body and the thruster has to be indicated.
+%\subsection{Basics of URDF}
+%
+%The \texttt{xacro} format allows using variables to generate the URDF model of a robot. 
+%In this format, the robot is composed of links and joints. In our case we will assume that the AUV has only one link and no joints.
+%
+%In the example the AUV is composed of one cylinder, which is described under the \texttt{visual} tag.
+%A tutorial is available at \texttt{http://wiki.ros.org/urdf/Tutorials/Building a Visual Robot Model with URDF from Scratch}
+%
+%In addition to the main body, thruster links can be defined with the \texttt{xacro:thruster\_link} tag, as  shown in the example.
+%The xyz position and the roll-pitch-yaw orientation between the main body and the thruster has to be indicated.
 
 \section{Low-level tuning}
 
-Now that the xacro is updated, we can use the launch file to run the simulation.
 
 The gains of the PID can be tuned online through Dynamic Reconfigure in (\texttt{rqt}).
 The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
@@ -159,14 +158,16 @@ In this section we will replace it by an EKF estimator and see the problems that
  \includegraphics[width=\linewidth]{graph_ekf}
 \end{figure}
 
-Here, Gazebo is still publishing the ground truth but on the \texttt{/auv/ground\_truth} topic. This data is processed (noise is added)
-in order to simulate a visual odometry (\texttt{/auv/vo} topic). 
+Here, Gazebo is still publishing the ground truth but on the \texttt{/auv/ground\_truth} topic. This data is processed (noise is added) and republished from two simulated sensors:
+\begin{enumerate}
+  \item A depth sensor publishing a pose on \texttt{/auv/depth} where only the Z-position is meaningful
+  \item A USBL device publishing a pose on \texttt{/auv/usbl} where only the X and Y positions and Z orientation (yaw) are meaningful
+\end{enumerate}
 Gazebo is also publishing simulated data from the IMU on the \texttt{/auv/imu\_data} topic. 
 Finally, the Gazebo gui is not visible anymore (like an actual underwater vehicle) and RViz displays the estimate of the AUV (in red). 
 For comparison purpose, the ground truth is displayed in blue. The setpoint is still displayed in green.
 
-The two sensor data (visual odometry and IMU) should be fused by the EKF node in order to output an estimate of the state on the \texttt{/auv/state} topic 
-that is used by the PID and by your waypoint node.
+The three sensor data (depth, USBL and IMU) should be fused by the EKF node in order to output an estimate of the state on the \texttt{/auv/state} topic that is used by the PID and your waypoint node.
 
 Two launch files have to be run to do so:
 \begin{itemize}
@@ -182,7 +183,7 @@ The \texttt{ekf.launch} should be modified in order to:
 Documentation of the EKF node can be found on the \link{http://docs.ros.org/lunar/api/robot_localization/html/index.html}{\texttt{robot\_localization} package website}.
 This node creates a 15-components (6 pose, 6 velocities and 3 accelerations) state estimate.
 The parameters of this node should be modified so that the EKF node
-subscribes to the available data topics (visual odometry and IMU). The boolean tables should
+subscribes to the available data topics. The boolean tables should
 also be updated in order to tell which components of the state are measured by each of the sensors. 
 
 Do not hesitate to run the EKF with only a partial knowledge of the state (only IMU for instance) in order to see the effect on the localization accuracy.

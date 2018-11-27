@@ -143,9 +143,9 @@
       <topic>imu_data</topic>
       <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
         <topicName>imu_data</topicName>
-        <bodyName>imu_link</bodyName>
-        <updateRateHZ>10.0</updateRateHZ>
-        <gaussianNoise>0.01</gaussianNoise>
+        <bodyName>base_link</bodyName>
+        <updateRateHZ>500.0</updateRateHZ>
+        <gaussianNoise>0.001</gaussianNoise>
         <xyzOffset>0 0 0</xyzOffset>
         <rpyOffset>0 0 0</rpyOffset>
         <frameName>base_link</frameName>

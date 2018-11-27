@@ -9,11 +9,11 @@
     </include>
     
     <!-- rviz with config -->
-    <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/config_ekf.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/launch/config_ekf.rviz" />
     
     <!-- include gazebo spawner (generated while parsing uwsim launcher) -->
     <group ns="auv">
-        <param name="robot_description" command="$(find xacro)/xacro --inorder $(find ecn_rasom)/urdf/auv.xacro"/>
+        <param name="robot_description" command="$(find xacro)/xacro $(find ecn_rasom)/urdf/auv.xacro"/>
          <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
         <node name="spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model auv -param robot_description -x 0 -y 0 -z 1 -R 0 -P 0 -Y 0"/>
 
@@ -24,7 +24,7 @@
         <node name="pid_control" pkg="freefloating_gazebo" type="pid_control" output="screen"/>
         
         <!-- Visual odom with covariance on each axis -->
-        <node name="visual_odom" pkg="ecn_rasom" type="nav" output="screen" respawn="true">
+        <node name="sensors" pkg="ecn_rasom" type="sensors" output="screen" respawn="true">
             <param name="x" value="0.1"/>
             <param name="y" value="0.1"/>
             <param name="z" value="0.01"/>
@@ -36,7 +36,7 @@
         </group>
     
     <!-- spawn terrain -->
-    <param name="terrain_description" command="$(find xacro)/xacro.py $(find ecn_rasom)/terrain/shipwreck/terrain.sdf"/>
+    <param name="terrain_description" command="$(find xacro)/xacro $(find ecn_rasom)/terrain/shipwreck/terrain.sdf"/>
     <node name="terrain_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-sdf -model terrain -param terrain_description -x 0 -y 0 -z 0 -R 0 -P 0 -Y 0"/>
     
 

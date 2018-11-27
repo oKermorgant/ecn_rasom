@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+    
+
+    <!-- include gazebo spawner (generated while parsing uwsim launcher) -->
+    <group ns="auv">
+        <param name="robot_description" command="$(find xacro)/xacro $(find ecn_rasom)/urdf/auv.xacro"/>
+     
+    </group>
+    
+</launch>

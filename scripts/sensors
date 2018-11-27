@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+
+import roslib
+import rospy 
+from geometry_msgs.msg import PoseStamped
+import tf
+from nav_msgs.msg import Odometry
+from std_srvs.srv import Empty
+from pylab import randn, sqrt, arctan2, sin, cos
+import sys
+
+class Listener:
+    def __init__(self):
+        
+        # get model
+        self.sub = rospy.Subscriber('ground_truth', Odometry, self.state_callback)
+        self.received = False
+                
+    def state_callback(self, msg): 
+        self.received = True
+        self.position = msg.pose.pose.position
+        self.orientation = msg.pose.pose.orientation
+        
+if __name__ == '__main__':
+    
+    rospy.init_node('nav_odom')
+
+    # unpause physics after a while
+    unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
+    #unpause.wait_for_service()
+    unpause()
+  
+    ground_truth = Listener()
+    
+    # usbl = XY + noise
+    usbl_pub = rospy.Publisher('usbl', Odometry, queue_size=10)
+    usbl = Odometry()
+    depth_pub = rospy.Publisher('depth', Odometry, queue_size=10)
+    depth = Odometry()
+    cov = [rospy.get_param('~'+s) for s in ['x','y','z', 'roll', 'pitch', 'yaw']]           
+    std = [sqrt(v) for v in cov]
+    
+    usbl.child_frame_id = 'base_link'
+    usbl.header.frame_id = 'world'
+    depth.child_frame_id = 'base_link'
+    depth.header.frame_id = 'world'
+    usbl.pose.covariance[0] = cov[0]
+    usbl.pose.covariance[7] = cov[1]
+    depth.pose.covariance[14] = cov[2]
+    usbl.pose.covariance[21] = cov[3]
+    usbl.pose.covariance[28] = cov[4]
+    usbl.pose.covariance[35] = cov[5]
+    
+    
+    T =1./100
+    while not rospy.is_shutdown():
+        
+        # modify ground truth received from Gazebo to simulated visual odom
+        if ground_truth.received:
+            usbl.pose.pose.position.x = ground_truth.position.x + std[0]
+            usbl.pose.pose.position.y = ground_truth.position.y + std[1]
+            usbl.pose.pose.orientation = ground_truth.orientation
+            depth.pose.pose.position.z = ground_truth.position.z + std[2]
+            
+            usbl.header.stamp = rospy.Time.now()
+            depth.header.stamp = rospy.Time.now()
+            usbl_pub.publish(usbl)
+            depth_pub.publish(depth)
+        
+        rospy.sleep(T)
