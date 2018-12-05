@@ -20,7 +20,6 @@
            TwistStamped, Imu). To add a new one, simply append the next number in the sequence to its base name,
            e.g., odom0, odom1, twist0, twist1, imu0, imu1, imu2, etc. The value should be the topic name. These
            parameters obviously have no default values, and must be specified. -->
-            <param name="odom0" value="visual_odom"/>  <!-- visual odometry topic -->
             <param name="imu0" value="imu_data"/>    <!-- IMU data topic -->
       
       
@@ -31,12 +30,6 @@
                 message types lack certain variables. For example, a TwistWithCovarianceStamped message has no pose information, so
                 the first six values would be meaningless in that case. Each vector defaults to all false if unspecified, effectively
                 making this parameter required for each sensor. -->
-            <rosparam param="odom0_config">[true, true, true,
-                                            false, false, false,
-                                            false, false, false,
-                                            false, false, false,
-                                            false, false, false]</rosparam>
-
             <rosparam param="imu0_config">[false, false, false,
                                             true, true, true,
                                             false, false, false,
@@ -110,7 +103,6 @@
            this is acceptable. For orientation variables, it can lead to trouble. Users should make sure that all orientation
            variables have at least one source of absolute measurement. -->
       <param name="odom0_differential" value="false"/>
-      
       <param name="imu0_differential" value="false"/>
 
       <!-- When the node starts, if this parameter is true, then the first measurement is treated as a "zero point" for all
