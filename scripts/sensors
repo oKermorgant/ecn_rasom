@@ -2,7 +2,7 @@
 
 import roslib
 import rospy 
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseWithCovarianceStamped
 import tf
 from nav_msgs.msg import Odometry
 from std_srvs.srv import Empty
@@ -33,16 +33,14 @@ if __name__ == '__main__':
     ground_truth = Listener()
     
     # usbl = XY + noise
-    usbl_pub = rospy.Publisher('usbl', Odometry, queue_size=10)
-    usbl = Odometry()
-    depth_pub = rospy.Publisher('depth', Odometry, queue_size=10)
-    depth = Odometry()
+    usbl_pub = rospy.Publisher('usbl', PoseWithCovarianceStamped, queue_size=10)
+    usbl = PoseWithCovarianceStamped()
+    depth_pub = rospy.Publisher('depth', PoseWithCovarianceStamped, queue_size=10)
+    depth = PoseWithCovarianceStamped()
     cov = [rospy.get_param('~'+s) for s in ['x','y','z', 'roll', 'pitch', 'yaw']]           
     std = [sqrt(v) for v in cov]
     
-    usbl.child_frame_id = 'base_link'
     usbl.header.frame_id = 'world'
-    depth.child_frame_id = 'base_link'
     depth.header.frame_id = 'world'
     usbl.pose.covariance[0] = cov[0]
     usbl.pose.covariance[7] = cov[1]

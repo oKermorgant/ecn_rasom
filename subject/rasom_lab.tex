@@ -125,10 +125,10 @@ The current position of the AUV can be found on the topic \texttt{/auv/state} an
 in the \texttt{pose} section.\\
 
 
-\section{Modification and tuning of the robot}
-
-The underwater robot itself is defined in the \texttt{auv.xacro} file. Check the available sensors and thrusters and find the available motions from the thruster map.
-You can add or modify the thrusters if needed. The thruster control matrix is computed automatically, however the gains of the PID are not tuned accordingly.
+%\section{Modification and tuning of the robot}
+%
+%The underwater robot itself is defined in the \texttt{auv.xacro} file. Check the available sensors and thrusters and find the available motions from the thruster map.
+%You can add or modify the thrusters if needed. The thruster control matrix is computed automatically, however the gains of the PID are not tuned accordingly.
 
 %\subsection{Basics of URDF}
 %
@@ -142,7 +142,6 @@ You can add or modify the thrusters if needed. The thruster control matrix is co
 %The xyz position and the roll-pitch-yaw orientation between the main body and the thruster has to be indicated.
 
 \section{Low-level tuning}
-
 
 The gains of the PID can be tuned online through Dynamic Reconfigure in (\texttt{rqt}).
 The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
