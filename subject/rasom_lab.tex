@@ -45,15 +45,15 @@ This package has the classical ROS structure:
 \caption{Files used by the simulator}
 \end{figure}
 
-\subsection{First run of Gazebo}
-
-It was noticed on some computers that the first launch of Gazebo can take some time. In order to check, launch this empty world simulation:
-\begin{center}\defaultstyle
-\begin{lstlisting}
-roslaunch gazebo_ros empty_world.launch
-  \end{lstlisting}
-  \end{center}
-  When the Gazebo GUI is displayed, type\texttt{Ctrl-C} in order to end the programs.
+%\subsection{First run of Gazebo}
+%
+%It was noticed on some computers that the first launch of Gazebo can take some time. In order to check, launch this empty world simulation:
+%\begin{center}\defaultstyle
+%\begin{lstlisting}
+%roslaunch gazebo_ros empty_world.launch
+%  \end{lstlisting}
+%  \end{center}
+%  When the Gazebo GUI is displayed, type\texttt{Ctrl-C} in order to end the programs.
 
 \section{Waypoint following}
 
@@ -141,11 +141,11 @@ in the \texttt{pose} section.\\
 %In addition to the main body, thruster links can be defined with the \texttt{xacro:thruster\_link} tag, as  shown in the example.
 %The xyz position and the roll-pitch-yaw orientation between the main body and the thruster has to be indicated.
 
-\section{Low-level tuning}
-
-The gains of the PID can be tuned online through Dynamic Reconfigure in (\texttt{rqt}).
-The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
-Once acceptable values have been found for the gains, you may update the \texttt{auv\_control.yaml} file to set the default values.
+%\section{Low-level tuning}
+%
+%The gains of the PID can be tuned online through Dynamic Reconfigure in (\texttt{rqt}).
+%The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
+%Once acceptable values have been found for the gains, you may update the \texttt{auv\_control.yaml} file to set the default values.
 
 \section{Pose estimation from Extended Kalman Filter}
 
@@ -186,5 +186,9 @@ subscribes to the available data topics. The boolean tables should
 also be updated in order to tell which components of the state are measured by each of the sensors. 
 
 Do not hesitate to run the EKF with only a partial knowledge of the state (only IMU for instance) in order to see the effect on the localization accuracy.
+
+\section{Back to mission control}
+
+
 
 \end{document}

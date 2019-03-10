@@ -1,15 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-    <!-- Test joints in UWsim with joint_state_publisher -->    
-    <group ns='auv'>    
-    
-    <!--Pose setpoint-->
-    <node name="body_position_gui" pkg="slider_publisher" type="slider_publisher" output="screen" respawn="true">
-        <param name="file" value="$(find ecn_rasom)/launch/PoseStampedGUI.yaml"/>
-    </node>
-    
-    
-    </group>
-    
-    
+    <!-- Publish manual setpoint -->    
+    <include file="$(find freefloating_gazebo)/gui/pose_gui.launch" ns="auv"/>   
 </launch>

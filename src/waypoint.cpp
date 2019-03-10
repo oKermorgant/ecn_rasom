@@ -91,6 +91,7 @@ int main (int argc, char** argv)
 
     while (ros::ok())
     {
+
         if(odom_ok)
         {
             // check Cartesian distance to current wp
