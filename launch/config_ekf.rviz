@@ -4,6 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Ground truth1
         - /Ground truth1/Shape1
         - /Estimation1/Covariance1
       Splitter Ratio: 0.47186148166656494
@@ -29,6 +30,8 @@ Panels:
     SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
 Visualization Manager:
   Class: ""
   Displays:
@@ -65,21 +68,40 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        fwd_left:
+        camera:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        fwd_right:
+        lsm:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        imu_back:
+        mpu:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        imu_front:
+        thr1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        thr2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        thr3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        thr4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        thr5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        thr6:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -89,7 +111,7 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
-    - Angle Tolerance: 0.10000000149011612
+    - Angle Tolerance: 0.20000000298023224
       Class: rviz/Odometry
       Covariance:
         Orientation:
@@ -109,7 +131,7 @@ Visualization Manager:
       Enabled: true
       Keep: 20
       Name: Ground truth
-      Position Tolerance: 0.10000000149011612
+      Position Tolerance: 0.5
       Shape:
         Alpha: 1
         Axes Length: 1
@@ -187,7 +209,10 @@ Visualization Manager:
     - Class: rviz/FocusCamera
     - Class: rviz/Measure
     - Class: rviz/SetInitialPose
+      Theta std deviation: 0.2617993950843811
       Topic: /initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
     - Class: rviz/SetGoal
       Topic: /move_base_simple/goal
     - Class: rviz/PublishPoint
@@ -197,25 +222,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 22.228626251220703
+      Distance: 10.88060474395752
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -3.523242473602295
-        Y: 3.231015205383301
-        Z: -4.009792804718018
+        X: 0.9360040426254272
+        Y: 7.460545539855957
+        Z: -6.679971218109131
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.29039913415908813
+      Pitch: 0.830398678779602
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.733575820922852
+      Yaw: 5.853581428527832
     Saved: ~
 Window Geometry:
   "&Displays":
@@ -233,5 +258,5 @@ Window Geometry:
   Tool Properties:
     collapsed: false
   Width: 1677
-  X: 124
-  Y: 35
+  X: 120
+  Y: 8

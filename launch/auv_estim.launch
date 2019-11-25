@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <launch>
+    <arg name="robot" default="brov2"/>
+    
     <!-- Launch Gazebo with underwater world, no gui -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="gui" value="false"/>
@@ -9,19 +11,23 @@
     </include>
     
     <!-- rviz with config -->
-    <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/launch/config_ekf.rviz" />
+    <include file="$(find freefloating_gazebo)/launch/rviz.launch">
+        <arg name="ns" value="auv"/>
+        <arg name="config" value="$(find ecn_rasom)/launch/config_ekf.rviz" />
+    </include>
+<!--     <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/launch/config_ekf.rviz" /> -->
     
     <!-- include gazebo spawner (generated while parsing uwsim launcher) -->
     <group ns="auv">
-        <param name="robot_description" command="$(find xacro)/xacro $(find ecn_rasom)/urdf/auv.xacro"/>
+        <param name="robot_description" command="$(find xacro)/xacro $(find ecn_rasom)/urdf/$(arg robot).xacro"/>
          <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
         <node name="spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model auv -param robot_description -x 0 -y 0 -z 1 -R 0 -P 0 -Y 0"/>
 
         <!-- Load controller configurations (vehicle and arm) from YAML file to parameter server -->
-        <rosparam file="$(find ecn_rasom)/config/auv_control.yaml" command="load"/>
+        <rosparam file="$(find ecn_rasom)/config/$(arg robot).yaml" command="load"/>
   
         <!-- Launch low-level PID control for body and arm -->
-        <node name="pid_control" pkg="freefloating_gazebo" type="pid_control" output="screen"/>
+        <node name="pid_control" pkg="freefloating_gazebo" type="pid_body" output="screen"/>
         
         <!-- Visual odom with covariance on each axis -->
         <node name="sensors" pkg="ecn_rasom" type="sensors" output="screen" respawn="true">

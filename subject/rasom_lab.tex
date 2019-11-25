@@ -162,11 +162,11 @@ Here, Gazebo is still publishing the ground truth but on the \texttt{/auv/ground
   \item A depth sensor publishing a pose on \texttt{/auv/depth} where only the Z-position is meaningful
   \item A USBL device publishing a pose on \texttt{/auv/usbl} where only the X and Y positions and Z orientation (yaw) are meaningful
 \end{enumerate}
-Gazebo is also publishing simulated data from the IMU on the \texttt{/auv/imu\_data} topic. 
+Gazebo is also publishing simulated IMU data on the \texttt{/auv/lsm} and \texttt{/auv/mpu} topics. 
 Finally, the Gazebo gui is not visible anymore (like an actual underwater vehicle) and RViz displays the estimate of the AUV (in red). 
 For comparison purpose, the ground truth is displayed in blue. The setpoint is still displayed in green.
 
-The three sensor data (depth, USBL and IMU) should be fused by the EKF node in order to output an estimate of the state on the \texttt{/auv/state} topic that is used by the PID and your waypoint node.
+The sensor data (depth, USBL and 2 IMU) should be fused by the EKF node in order to output an estimate of the state on the \texttt{/auv/state} topic that is used by the PID and your waypoint node.
 
 Two launch files have to be run to do so:
 \begin{itemize}
