@@ -41,7 +41,7 @@
   </gazebo>
   <link name="base_link">
     <visual>
-      <origin rpy="1.57079632679 0 1.57079632679" xyz="-0.253 -0.167 -0.19"/>
+      <origin rpy="1.57079632679 0 1.57079632679" xyz="0.1 -0.167 -0.19"/>
       <geometry>
         <mesh filename="urdf/brov2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
