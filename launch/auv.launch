@@ -17,7 +17,7 @@
           args="-x 100 -y 100 -g 0.2 -b 1 -a 0.2"/>
     
     <!-- rviz with config -->
-   <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/launch/config_ekf.rviz" /> 
+   <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find ecn_rasom)/launch/config.rviz" /> 
    
      <node name="uwsim" pkg="uwsim" type="uwsim" 
         args="--dataPath $(find ecn_rasom) --configfile scenes/$(arg robot).xml" respawn="true"
