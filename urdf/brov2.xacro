@@ -4,6 +4,9 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="auv">
+        <material name="brovgrey">
+    <color rgba="0.25 0.25 0.3 1"/>
+  </material>
   <!-- Plugin list -->
   <gazebo>
     <!-- Gazebo plugin listens to the body-->
@@ -45,6 +48,7 @@
       <geometry>
         <mesh filename="package://ecn_rasom/urdf/brov2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+      <material name="brovgrey"/>
     </visual>
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 -0.1"/>
