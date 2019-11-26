@@ -43,7 +43,7 @@
     <visual>
       <origin rpy="1.57079632679 0 1.57079632679" xyz="0.1 -0.167 -0.19"/>
       <geometry>
-        <mesh filename="file:///home/olivier/code/ros/src/ecn/rasom/ecn_rasom/ecn_rasom/urdf/brov2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://ecn_rasom/urdf/brov2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
     <inertial>
