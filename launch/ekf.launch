@@ -134,13 +134,13 @@
       <!-- If your data is subject to outliers, use these threshold settings, expressed as Mahalanobis distances, to control
            how far away from the current vehicle state a sensor measurement is permitted to be. Each defaults to
            numeric_limits<double>::max() if unspecified. -->
-      <param name="odom0_pose_rejection_threshold" value="5"/>
+<!--      <param name="odom0_pose_rejection_threshold" value="5"/>
       <param name="odom0_twist_rejection_threshold" value="1"/>
       <param name="pose0_rejection_threshold" value="2"/>
       <param name="twist0_rejection_threshold" value="1.2"/>
       <param name="imu0_pose_rejection_threshold" value="0.3"/>
       <param name="imu0_twist_rejection_threshold" value="0.1"/>
-      <param name="imu0_linear_acceleration_rejection_threshold" value="0.1"/>
+      <param name="imu0_linear_acceleration_rejection_threshold" value="0.1"/>-->
 
       <!-- Debug settings. Not for the faint of heart. Outputs a ludicrous amount of information to the file
            specified by debug_out_file. I hope you like matrices! Defaults to false if unspecified. -->
