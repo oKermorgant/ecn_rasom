@@ -154,13 +154,13 @@ Visualization Manager:
           Frame: Local
           Offset: 1
           Scale: 1
-          Value: true
+          Value: false
         Position:
           Alpha: 0.30000001192092896
           Color: 204; 51; 204
           Scale: 1
           Value: true
-        Value: false
+        Value: true
       Enabled: true
       Keep: 20
       Name: Estimation
@@ -228,9 +228,9 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -1.9009045362472534
-        Y: -0.7660846710205078
-        Z: -4.5359978675842285
+        X: -2.5712244510650635
+        Y: -1.0331326723098755
+        Z: -3.048712968826294
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
