@@ -6,8 +6,18 @@
     
     <group ns="auv">
         
-        <!-- run your waypoint follower here -->
-
+        <!-- Depth / USBL simulation with associated covariances -->
+        <node name="sensors" pkg="ecn_rasom" type="sensors" output="screen" respawn="true">
+            <param name="x" value="0.1"/>
+            <param name="y" value="0.1"/>
+            <param name="z" value="0.01"/>
+            <param name="roll" value="0.1"/>
+            <param name="pitch" value="0.1"/>
+            <param name="yaw" value="0.01"/>
+        </node>    
+        
+        <!-- your waypoint follower -->
+        <node name="waypoint" pkg="ecn_rasom" type="waypoint"/>
         
     <!-- This node will take in measurements from odometry, IMU, stamped pose, and stamped twist messages. It tracks
          the state of the robot, with the state vector being defined as X position, Y position, Z position,
