@@ -4,7 +4,7 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="auv" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    
+        
 <xacro:property name="body_RGB" value="0.25 0.25 0.28"/>  
 <material name="brovgrey">
 <color rgba="${body_RGB} 1"/>
