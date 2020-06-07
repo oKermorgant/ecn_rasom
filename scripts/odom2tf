@@ -7,25 +7,36 @@ from nav_msgs.msg import Odometry
 from std_srvs.srv import Empty
 import sys
 
-
 rospy.init_node('odom2tf')
 
 br = tf.TransformBroadcaster()
 
-def odomCB(msg):
-    pose = msg.pose.pose
-    br.sendTransform((pose.position.x, pose.position.y, pose.position.z),
+class Repeater:
+    def __init__(self):
+        self.sub = rospy.Subscriber('state', Odometry, self.odomCB)
+        self.pose = None
+        
+    def odomCB(self, msg):
+        self.pose = msg.pose.pose
+
+    def repeat(self, pose):
+        br.sendTransform((pose.position.x, pose.position.y, pose.position.z),
                      (pose.orientation.x,pose.orientation.y,pose.orientation.z,pose.orientation.w),
                      rospy.Time.now(),
                      'base_link',
                      'world')
-    
-rospy.Subscriber('state', Odometry, odomCB)
 
 
 # unpause physics after a while
 unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
-#unpause.wait_for_service()
+unpause.wait_for_service()
 unpause()
+
+repeater = Repeater()
+
+while not rospy.is_shutdown():
     
-rospy.spin()
+    if repeater.pose:
+        repeater.repeat(repeater.pose)
+    rospy.sleep(0.05)
+                
