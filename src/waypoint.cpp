@@ -73,7 +73,7 @@ int main (int argc, char** argv)
     int idx;
     for(idx = 0; idx < wp.size(); ++idx)
     {
-        std::cout << "   wp #" << idx << ": ";
+        std::cout << " wp #" << idx << ": ";
         std::cout << "x = " << coord(idx, "x");
         std::cout << ", y = " << coord(idx, "y");
         std::cout << ", z = " << coord(idx, "z");

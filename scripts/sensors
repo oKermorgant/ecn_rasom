@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import roslib
 import rospy 
@@ -57,6 +57,7 @@ if __name__ == '__main__':
         if ground_truth.received:
             usbl.pose.pose.position.x = ground_truth.position.x + std[0]
             usbl.pose.pose.position.y = ground_truth.position.y + std[1]
+            usbl.pose.pose.position.z = ground_truth.position.y + std[1]
             usbl.pose.pose.orientation = ground_truth.orientation
             depth.pose.pose.position.z = ground_truth.position.z + std[2]
             

@@ -151,7 +151,7 @@
 <joint name="lsm" type="fixed">
     <parent link="base_link"/>
     <child link="lsm"/>
-    <origin rpy="0 0 -1.57079632679" xyz=".12 0.018 0.02"/>      
+    <origin rpy="0 0 0" xyz=".12 0.018 0.02"/>      
 </joint>
 
     <gazebo reference="lsm">
@@ -165,7 +165,7 @@
         <updateRateHZ>1000.0</updateRateHZ>
         <gaussianNoise>0.001</gaussianNoise>
         <xyzOffset>.12 0.018 0.02</xyzOffset>
-        <rpyOffset>0 0 -1.57079632679</rpyOffset>
+        <rpyOffset>0 0 0</rpyOffset>
         <frameName>lsm</frameName>
     </plugin>
     </sensor>
@@ -175,7 +175,7 @@
 <joint name="mpu" type="fixed">
     <parent link="base_link"/>
     <child link="mpu"/>
-    <origin rpy="0 0 -1.57079632679" xyz=".13 0.018 0.02"/>      
+    <origin rpy="0 0 0" xyz=".13 0.018 0.02"/>      
 </joint>
 
     <gazebo reference="mpu">
@@ -189,7 +189,7 @@
         <updateRateHZ>1000.0</updateRateHZ>
         <gaussianNoise>0.001</gaussianNoise>
         <xyzOffset>.13 0.018 0.02</xyzOffset>
-        <rpyOffset>0 0 -1.57079632679</rpyOffset>
+        <rpyOffset>0 0 0</rpyOffset>
         <frameName>mpu</frameName>
     </plugin>
     </sensor>
