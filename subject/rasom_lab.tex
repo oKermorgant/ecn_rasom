@@ -78,24 +78,19 @@ Two GUI are launched:
  \item RViz is a visualizer and displays the current pose estimate (red) and the current waypoint to be followed (green)
 \end{itemize}
 The Gazebo dynamic simulator is also launched without GUI. In case of issues with UWsim display, the launch file can be used with Gazebo GUI instead of UWSim:
-\begin{center}\defaultstyle
-\begin{lstlisting}
+\begin{bashcodelarge}
 roslaunch ecn_rasom auv.launch uwsim:=false
-  \end{lstlisting}
-  \end{center}
+  \end{bashcodelarge}
 
 Manually defined setpoints can be easily published by using \texttt{rqt} message publisher, to check if the waypoints can be followed (maximum depth, etc.).\\
 
 The goal is to modify the source and waypoint list in order to loop through the waypoints (go back to waypoint 0 after the last one was reached).
 The structure of the \texttt{setpoint} message can be found with:
-\begin{center}\defaultstyle
-\begin{lstlisting}
+\begin{bashcodelarge}
 rosmsg show geometry_msgs/PoseStamped
-\end{lstlisting}
-\end{center}
+\end{bashcodelarge}
 which gives:
-\begin{center}\defaultstyle
-\begin{lstlisting}
+\begin{bashcodelarge}
 std_msgs/Header header
   uint32 seq
   time stamp
@@ -110,15 +105,12 @@ geometry_msgs/Pose pose
     float64 y
     float64 z
     float64 w
-\end{lstlisting}
-\end{center}
+\end{bashcodelarge}
 The header is already written but you have to define the pose section from the reading of the loaded waypoint file.
 A function is available to write the $i-$th waypoint into the \texttt{setpoint} message:
-\begin{center}\cppstyle
-\begin{lstlisting}
+\begin{cppcodelarge}
 writeWP(int idx);
-\end{lstlisting}
-\end{center}
+\end{cppcodelarge}
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
 Two thresholds are loaded from the YAML file: \texttt{thr} and \texttt{thr\_angle}, that may be tuned accordingly to the desired accuracy.\\
 The current position of the AUV can be found on the topic \texttt{/auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are interested only
