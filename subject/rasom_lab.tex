@@ -17,7 +17,10 @@ and low-level control (PID's) will be tuned. At the end, the AUV should be able 
 \subsection{Installing the simulator}
 
 The simulator is in a ROS package called \texttt{freefloating\_gazebo} and should be already installed on the P-ro computers.\\
-The actual package that you will modify is downloaded (in \texttt{\~{}/ros/src}) with \texttt{rosdl ecn\_rasom}\footnote{to use your own computer, git should be used to clone https://github.com/oKermorgant/ecn\_rasom.git}
+The actual package that you will modify is downloaded (in \texttt{\~{}/ros/src}) with\footnote{to use your own computer, git should be used to clone https://github.com/oKermorgant/ecn\_rasom.git}:
+\begin{bashcodelarge}
+rosdl ecn_rasom
+\end{bashcodelarge}
 
 This package has the classical ROS structure:
 \begin{figure}[h]
@@ -44,6 +47,13 @@ This package has the classical ROS structure:
 %\begin{minipage}{.2\linewidth} ~ \end{minipage}
 \caption{Files used by the simulator}
 \end{figure}
+
+It should be compiled once from the \texttt{\~{}/ros} folder with:
+\begin{bashcodelarge}
+catkin build ecn_rasom
+\end{bashcodelarge}
+QtCreator can be automatically configured by calling \texttt{gqt} from the \texttt{ecn\_rasom} package.
+
 
 %\subsection{First run of Gazebo}
 %
