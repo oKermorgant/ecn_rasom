@@ -1,4 +1,4 @@
-threshold: 0.4
+threshold: 0.1
 threshold_angle: 0.4
 wp:
     - {x: 0, y: 5, z: -4, theta: -1.05}

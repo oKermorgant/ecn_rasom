@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="robot" default="brov2"/>
+    
+
+     <node name="uwsim" pkg="uwsim" type="uwsim" 
+        args="--dataPath $(find ecn_rasom) --configfile scenes/$(arg robot).xml"/>
+  
+   
+</launch>

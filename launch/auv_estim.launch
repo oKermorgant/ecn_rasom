@@ -28,7 +28,17 @@
   
         <!-- Launch low-level PID control for body and arm -->
         <node name="pid_control" pkg="freefloating_gazebo" type="pid_body" output="screen"/>
-
+        
+        <!-- Depth / USBL simulation with associated covariances -->
+        <node name="sensors" pkg="ecn_rasom" type="sensors" output="screen" respawn="true">
+            <param name="x" value="5"/>
+            <param name="y" value="5"/>
+            <param name="z" value="0.01"/>
+            <param name="roll" value="0.1"/>
+            <param name="pitch" value="0.1"/>
+            <param name="yaw" value="0.01"/>
+        </node>  
+        
         </group>
     
     <!-- spawn terrain -->
