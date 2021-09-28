@@ -5,6 +5,8 @@ import rospy
 import tf
 from nav_msgs.msg import Odometry
 from std_srvs.srv import Empty
+from sensor_msgs.msg import JointState
+from geometry_msgs.msg import WrenchStamped
 import sys
 
 rospy.init_node('odom2tf')
@@ -15,6 +17,15 @@ class Repeater:
     def __init__(self):
         self.sub = rospy.Subscriber('state', Odometry, self.odomCB)
         self.pose = None
+        
+        self.thruster_received = False
+        self.thruster = JointState()
+        self.thruster_sub = rospy.Subscriber('thruster_command', JointState, self.thrusterCallBack)
+            
+
+    def thrusterCallBack(self, msg): 
+        self.thruster_received = True
+        self.thruster = msg
         
     def odomCB(self, msg):
         self.pose = msg.pose.pose
@@ -34,9 +45,32 @@ unpause()
 
 repeater = Repeater()
 
+wrench_pub = []
+ratio = 1/50.
+
 while not rospy.is_shutdown():
     
     if repeater.pose:
         repeater.repeat(repeater.pose)
+        
+        
+    if repeater.thruster_received:
+        if len(wrench_pub) == 0:
+            # init dimension and publishers
+            use_position = (len(repeater.thruster.name) == len(repeater.thruster.position))
+        
+            wrench_pub = [rospy.Publisher(name + '_wrench', WrenchStamped, queue_size=1) for name in repeater.thruster.name]
+            wrench = [WrenchStamped() for name in repeater.thruster.name]
+            for i,w in enumerate(wrench):
+                w.header.frame_id = repeater.thruster.name[i]
+            
+        # publish wrenches
+        for i,w in enumerate(wrench):
+            w.header.stamp = rospy.Time.now()
+            if use_position:
+                w.wrench.force.z = repeater.thruster.position[i]*ratio
+            else:
+                w.wrench.force.z = repeater.thruster.effort[i]*ratio                     
+            wrench_pub[i].publish(w)
     rospy.sleep(0.05)
                 
