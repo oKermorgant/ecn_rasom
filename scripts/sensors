@@ -37,17 +37,20 @@ if __name__ == '__main__':
     usbl = PoseWithCovarianceStamped()
     depth_pub = rospy.Publisher('depth', PoseWithCovarianceStamped, queue_size=10)
     depth = PoseWithCovarianceStamped()
-    cov = [rospy.get_param('~'+s) for s in ['x','y','z', 'roll', 'pitch', 'yaw']]           
-    std = [sqrt(v) for v in cov]
+    usbl_cov = rospy.get_param('~usbl')
+    depth_cov = rospy.get_param('~depth')
+    
+    usbl_std,depth_std = sqrt(usbl_cov), sqrt(depth_cov)
+    
+    def noise(std):
+        return std * randn(1)[0]
     
     usbl.header.frame_id = 'world'
     depth.header.frame_id = 'world'
-    usbl.pose.covariance[0] = cov[0]
-    usbl.pose.covariance[7] = cov[1]
-    depth.pose.covariance[14] = cov[2]
-    usbl.pose.covariance[21] = cov[3]
-    usbl.pose.covariance[28] = cov[4]
-    usbl.pose.covariance[35] = cov[5]
+    for i in (0,7,14):
+        usbl.pose.covariance[i] = usbl_cov
+    
+    depth.pose.covariance[14] = depth_cov
     
     
     T =1./100
@@ -55,11 +58,11 @@ if __name__ == '__main__':
         
         # modify ground truth received from Gazebo to simulated visual odom
         if ground_truth.received:
-            usbl.pose.pose.position.x = ground_truth.position.x + std[0]
-            usbl.pose.pose.position.y = ground_truth.position.y + std[1]
-            usbl.pose.pose.position.z = ground_truth.position.y + std[1]
-            usbl.pose.pose.orientation = ground_truth.orientation
-            depth.pose.pose.position.z = ground_truth.position.z + std[2]
+            usbl.pose.pose.position.x = ground_truth.position.x + noise(usbl_std)
+            usbl.pose.pose.position.y = ground_truth.position.y + noise(usbl_std)
+            usbl.pose.pose.position.z = ground_truth.position.z + noise(usbl_std)
+            usbl.pose.pose.orientation.w = 1
+            depth.pose.pose.position.z = ground_truth.position.z + noise(depth_std)
             
             usbl.header.stamp = rospy.Time.now()
             depth.header.stamp = rospy.Time.now()
