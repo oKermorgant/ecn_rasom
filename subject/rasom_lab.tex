@@ -162,7 +162,7 @@ In this section we will replace it by an EKF estimator and see the problems that
 Here, Gazebo is still publishing the ground truth but on the \texttt{/auv/ground\_truth} topic. This data is processed (noise is added) and republished from two simulated sensors:
 \begin{enumerate}
   \item A depth sensor publishing a pose on \texttt{/auv/depth} where only the Z-position is meaningful
-  \item A USBL device publishing a pose on \texttt{/auv/usbl} where only the X and Y positions and Z orientation (yaw) are meaningful
+  \item A USBL device publishing a pose on \texttt{/auv/usbl} where only the (X,Y,Z) positions are meaningful
 \end{enumerate}
 Gazebo is also publishing simulated IMU data on the \texttt{/auv/lsm} and \texttt{/auv/mpu} topics. 
 Finally, the Gazebo gui is not visible anymore (like an actual underwater vehicle) and RViz displays the estimate of the AUV (in red). 
