@@ -48,9 +48,9 @@ if __name__ == '__main__':
     usbl.header.frame_id = 'world'
     depth.header.frame_id = 'world'
     for i in (0,7,14):
-        usbl.pose.covariance[i] = usbl_cov
+        usbl.pose.covariance[i] = 4*usbl_cov
     
-    depth.pose.covariance[14] = depth_cov
+    depth.pose.covariance[14] = 4*depth_cov
     
     
     T =1./100
