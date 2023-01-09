@@ -109,19 +109,6 @@ int main (int argc, char** argv)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
       // publish setpoint
       setpoint_pub.publish(setpoint);
     }

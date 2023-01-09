@@ -14,7 +14,7 @@
          the state of the robot, with the state vector being defined as X position, Y position, Z position,
          roll, pitch, yaw, their respective velocites, and linear acceleration. Units for all measurements are assumed
          to conform to the SI standard as specified in REP-103. -->
-    <node pkg="robot_localization" type="ukf_localization_node" name="ekf_localization" clear_params="true">
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" clear_params="true">
 
         
     <!-- The filter accepts an arbitrary number of inputs from each input message type (Odometry, PoseStamped,

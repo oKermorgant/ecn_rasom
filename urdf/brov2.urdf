@@ -61,7 +61,8 @@
       <!--       <origin rpy="1.57079632679 0 1.57079632679" xyz="0.1 -0.167 -0.19"/> -->
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ecn_rasom/urdf/bluerov2_noprop.dae"/>
+<!--         <mesh filename="package://ecn_rasom/urdf/bluerov2_noprop.dae"/> -->
+        <mesh filename="bluerov2_noprop.dae"/>
       </geometry>
       <material name="brovgrey"/>
     </visual>

@@ -16,8 +16,8 @@ and low-level control (PID's) will be tuned. At the end, the AUV should be able 
 
 \subsection{Installing the simulator}
 
-The simulator is in a ROS package called \texttt{freefloating\_gazebo} and should be already installed on the P-ro computers.\\
-The actual package that you will modify is downloaded (in \texttt{\~{}/ros/src}) with\footnote{to use your own computer, git should be used to clone https://github.com/oKermorgant/ecn\_rasom.git}:
+The simulator is in a ROS package called \okttt{freefloating_gazebo} and should be already installed on the P-ro computers.\\
+The actual package that you will modify is downloaded (in \okttt{\~/ros/src}) with\footnote{to use your own computer, git should be used to clone https://github.com/oKermorgant/ecn\_rasom.git}:
 \begin{bashcodelarge}
 rosdl ecn_rasom
 \end{bashcodelarge}
@@ -48,11 +48,11 @@ This package has the classical ROS structure:
 \caption{Files used by the simulator}
 \end{figure}
 
-It should be compiled once from the \texttt{\~{}/ros} folder with:
+It should be compiled once from the \okttt{\~/ros} folder with:
 \begin{bashcodelarge}
 catkin build ecn_rasom
 \end{bashcodelarge}
-QtCreator can be automatically configured by calling \texttt{gqt} from the \texttt{ecn\_rasom} package.
+QtCreator can be automatically configured by calling \okttt{gqt} from the \okttt{ecn_rasom} package.
 
 
 %\subsection{First run of Gazebo}
@@ -63,21 +63,21 @@ QtCreator can be automatically configured by calling \texttt{gqt} from the \text
 %roslaunch gazebo_ros empty_world.launch
 %  \end{lstlisting}
 %  \end{center}
-%  When the Gazebo GUI is displayed, type\texttt{Ctrl-C} in order to end the programs.
+%  When the Gazebo GUI is displayed, type\okttt{Ctrl-C} in order to end the programs.
 
 \section{Waypoint following}
 
-The first task is to finish the waypoint following node defined in \texttt{waypoint.cpp}. This node already loads the waypoints defined in \texttt{waypoints.yaml} but does not follow them yet.
+The first task is to finish the waypoint following node defined in \okttt{waypoint.cpp}. This node already loads the waypoints defined in \okttt{waypoints.yaml} but does not follow them yet.
 These waypoints should be modified according to the trajectory you want the robot to follow. A waypoint is defined by its $(x,y,z,\theta)$ values where $\theta$ is the yaw angle. Look at the current
-code to see how to change a yaw angle to a quaternion needed by the \texttt{PoseStamped} message.\\
+code to see how to change a yaw angle to a quaternion needed by the \okttt{PoseStamped} message.\\
 
-Topics can be renamed or the node can be run through a launch file in order to be in the \texttt{/auv} namespace.
+Topics can be renamed or the node can be run through a launch file in order to be in the \okttt{/auv} namespace.
 The simulation can then be run with:
 \begin{itemize}
- \item \texttt{roslaunch ecn\_rasom auv.launch} for all built-in nodes
- \item \texttt{rosrun ecn\_rasom waypoint} for yours
+ \item \okttt{roslaunch ecn_rasom auv.launch} for all built-in nodes
+ \item \okttt{rosrun ecn_rasom waypoint} for yours
 \end{itemize}
-which leads to the following graph where \texttt{/auv/wp} is your node.
+which leads to the following graph where \okttt{/auv/wp} is your node.
 \begin{figure}[h]\centering
  \includegraphics[width=.8\linewidth]{graph_wp}
 \end{figure}
@@ -92,10 +92,10 @@ The Gazebo dynamic simulator is also launched without GUI. In case of issues wit
 roslaunch ecn_rasom auv.launch uwsim:=false
   \end{bashcodelarge}
 
-Manually defined setpoints can be easily published by using \texttt{rqt} message publisher, to check if the waypoints can be followed (maximum depth, etc.).\\
+Manually defined setpoints can be easily published by using \okttt{rqt} message publisher, to check if the waypoints can be followed (maximum depth, etc.).\\
 
 The goal is to modify the source and waypoint list in order to loop through the waypoints (go back to waypoint 0 after the last one was reached).
-The structure of the \texttt{setpoint} message can be found with:
+The structure of the \okttt{setpoint} message can be found with:
 \begin{bashcodelarge}
 rosmsg show geometry_msgs/PoseStamped
 \end{bashcodelarge}
@@ -117,71 +117,71 @@ geometry_msgs/Pose pose
     float64 w
 \end{bashcodelarge}
 The header is already written but you have to define the pose section from the reading of the loaded waypoint file.
-A function is available to write the $i-$th waypoint into the \texttt{setpoint} message:
+A function is available to write the $i-$th waypoint into the \okttt{setpoint} message:
 \begin{cppcodelarge}
 writeWP(int idx);
 \end{cppcodelarge}
 Remember that the AUV may not reach perfectly the desired position, so you should cycle to the next waypoint when the position error is below a given threshold.
-Two thresholds are loaded from the YAML file: \texttt{thr} and \texttt{thr\_angle}, that may be tuned accordingly to the desired accuracy.\\
-The current position of the AUV can be found on the topic \texttt{/auv/state} and is of type \texttt{nav\_msgs/Odometry} with a structure similar to \texttt{geometry\_msgs/PoseStamped}, and where we are interested only
-in the \texttt{pose} section.\\
+Two thresholds are loaded from the YAML file: \okttt{thr} and \okttt{thr_angle}, that may be tuned accordingly to the desired accuracy.\\
+The current position of the AUV can be found on the topic \okttt{/auv/state} and is of type \okttt{nav_msgs/Odometry} with a structure similar to \okttt{geometry_msgs/PoseStamped}, and where we are interested only
+in the \okttt{pose} section.\\
 
 
 %\section{Modification and tuning of the robot}
 %
-%The underwater robot itself is defined in the \texttt{auv.xacro} file. Check the available sensors and thrusters and find the available motions from the thruster map.
+%The underwater robot itself is defined in the \okttt{auv.xacro} file. Check the available sensors and thrusters and find the available motions from the thruster map.
 %You can add or modify the thrusters if needed. The thruster control matrix is computed automatically, however the gains of the PID are not tuned accordingly.
 
 %\subsection{Basics of URDF}
 %
-%The \texttt{xacro} format allows using variables to generate the URDF model of a robot. 
+%The \okttt{xacro} format allows using variables to generate the URDF model of a robot. 
 %In this format, the robot is composed of links and joints. In our case we will assume that the AUV has only one link and no joints.
 %
-%In the example the AUV is composed of one cylinder, which is described under the \texttt{visual} tag.
-%A tutorial is available at \texttt{http://wiki.ros.org/urdf/Tutorials/Building a Visual Robot Model with URDF from Scratch}
+%In the example the AUV is composed of one cylinder, which is described under the \okttt{visual} tag.
+%A tutorial is available at \okttt{http://wiki.ros.org/urdf/Tutorials/Building a Visual Robot Model with URDF from Scratch}
 %
-%In addition to the main body, thruster links can be defined with the \texttt{xacro:thruster\_link} tag, as  shown in the example.
+%In addition to the main body, thruster links can be defined with the \okttt{xacro:thruster_link} tag, as  shown in the example.
 %The xyz position and the roll-pitch-yaw orientation between the main body and the thruster has to be indicated.
 
 %\section{Low-level tuning}
 %
-%The gains of the PID can be tuned online through Dynamic Reconfigure in (\texttt{rqt}).
+%The gains of the PID can be tuned online through Dynamic Reconfigure in (\okttt{rqt}).
 %The Dynamic Reconfigure plugin can be used to change the PID gains without exiting the simulator.
-%Once acceptable values have been found for the gains, you may update the \texttt{auv\_control.yaml} file to set the default values.
+%Once acceptable values have been found for the gains, you may update the \okttt{auv_control.yaml} file to set the default values.
 
 \section{Pose estimation from Extended Kalman Filter}
 
 The architecture used until then is quite unrealistic.
-Indeed, data on the topic \texttt{/auv/state} is the ground truth in terms of absolute position and velocity of the AUV (it is coming
+Indeed, data on the topic \okttt{/auv/state} is the ground truth in terms of absolute position and velocity of the AUV (it is coming
 directly from the simulator).
 In this section we will replace it by an EKF estimator and see the problems that arise. The new graph will be:
 \begin{figure}[h]\centering
  \includegraphics[width=\linewidth]{graph_ekf}
 \end{figure}
 
-Here, Gazebo is still publishing the ground truth but on the \texttt{/auv/ground\_truth} topic. This data is processed (noise is added) and republished from two simulated sensors:
+Here, Gazebo is still publishing the ground truth but on the \okttt{/auv/ground_truth} topic. This data is processed (noise is added) and republished from two simulated sensors:
 \begin{enumerate}
-  \item A depth sensor publishing a pose on \texttt{/auv/depth} where only the Z-position is meaningful
-  \item A USBL device publishing a pose on \texttt{/auv/usbl} where only the (X,Y,Z) positions are meaningful
+  \item A depth sensor publishing a pose on \okttt{/auv/depth} where only the Z-position is meaningful
+  \item A USBL device publishing a pose on \okttt{/auv/usbl} where only the (X,Y,Z) positions are meaningful
 \end{enumerate}
-Gazebo is also publishing simulated IMU data on the \texttt{/auv/lsm} and \texttt{/auv/mpu} topics. 
+Gazebo is also publishing simulated IMU data on the \okttt{/auv/lsm} and \okttt{/auv/mpu} topics. 
 Finally, the Gazebo gui is not visible anymore (like an actual underwater vehicle) and RViz displays the estimate of the AUV (in red). 
 For comparison purpose, the ground truth is displayed in blue. The setpoint is still displayed in green.
 
-The sensor data (depth, USBL and 2 IMU) should be fused by the EKF node in order to output an estimate of the state on the \texttt{/auv/state} topic that is used by the PID and your waypoint node.
+The sensor data (depth, USBL and 2 IMU) should be fused by the EKF node in order to output an estimate of the state on the \okttt{/auv/state} topic that is used by the PID and your waypoint node.
 
 Two launch files have to be run to do so:
 \begin{itemize}
- \item \texttt{roslaunch ecn\_rasom auv\_estim.launch} for all built-in nodes
- \item \texttt{roslaunch ecn\_rasom ekf.launch} for the EKF and your node
+ \item \okttt{roslaunch ecn_rasom auv_estim.launch} for all built-in nodes
+ \item \okttt{roslaunch ecn_rasom ekf.launch} for the EKF and your node
 \end{itemize}
 
-The \texttt{ekf.launch} should be modified in order to:
+The \okttt{ekf.launch} should be modified in order to:
 \begin{itemize}
  \item run your waypoint node
  \item use the EKF node with available sensors
 \end{itemize}
-Documentation of the EKF node can be found on the \link{http://docs.ros.org/lunar/api/robot_localization/html/index.html}{\texttt{robot\_localization} package website}.
+Documentation of the EKF node can be found on the \link{http://docs.ros.org/lunar/api/robot_localization/html/index.html}{\okttt{robot_localization} package website}.
 This node creates a 15-components (6 pose, 6 velocities and 3 accelerations) state estimate.
 The parameters of this node should be modified so that the EKF node
 subscribes to the available data topics. The boolean tables should
